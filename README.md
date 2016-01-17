@@ -1,1 +1,1 @@
-# dbag-workshop
+# workshop-db-ag

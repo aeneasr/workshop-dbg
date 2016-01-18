@@ -18,6 +18,10 @@
 			"Rev": "9c068cf16d982f8bd444b8c352acbeec34c4fe5b"
 		},
 		{
+			"ImportPath": "github.com/ory-am/common/env",
+			"Rev": "930cc805232909c38f2e68310b1e21f71b056d59"
+		},
+		{
 			"ImportPath": "github.com/parnurzeal/gorequest",
 			"Comment": "v0.2.11",
 			"Rev": "8fe8e16b3c50b6cc37399ee385b15f62a20bf584"

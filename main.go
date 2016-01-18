@@ -2,12 +2,18 @@ package main
 
 // The import section defines libraries that we are going to use in our program.
 import (
-	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
+
+	"github.com/ory-am/common/env"
+	"github.com/gorilla/mux"
+	"encoding/json"
 )
+
+// In a 12 factor app, we must obey the environment variables.
+var envHost = env.Getenv("HOST", "")
+var envPort = env.Getenv("PORT", "5678")
 
 // Contact defines the structure of a contact which including name, department and company.
 type Contact struct {
@@ -60,8 +66,12 @@ func main() {
 	// Print some information.
 	fmt.Printf("Listening on %s\n", "http://localhost:5678")
 
-	// Start up the server.
-	log.Fatalf("Could not set up server because %s", http.ListenAndServe(":5678", router))
+	// Start up the server and check for errors.
+	listenOn := fmt.Sprintf("%s:%s", envHost, envPort)
+	err := http.ListenAndServe(listenOn, router)
+	if err != nil {
+		log.Fatalf("Could not set up server because %s", err)
+	}
 }
 
 // listContacts takes a contact list and outputs it.

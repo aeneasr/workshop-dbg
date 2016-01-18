@@ -2,8 +2,7 @@
 
 [![Build Status](https://travis-ci.org/ory-am/workshop-dbg.svg?branch=master)](https://travis-ci.org/ory-am/workshop-dbg)
 
-To do:
-Check intellij, git etc. on a clean machine
+To do: Check intellij, git etc. on a clean machine
 
 Prerequisites
 + Go

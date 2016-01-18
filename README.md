@@ -3,6 +3,8 @@
 [![Build Status](https://travis-ci.org/ory-am/workshop-dbg.svg?branch=master)](https://travis-ci.org/ory-am/workshop-dbg)
 [![Coverage Status](https://coveralls.io/repos/github/ory-am/workshop-dbg/badge.svg?branch=master)](https://coveralls.io/github/ory-am/workshop-dbg?branch=master)
 
+I'm live [here](http://dbg-contacts.herokuapp.com)
+
 To do: Check intellij, git etc. on a clean machine
 
 Prerequisites

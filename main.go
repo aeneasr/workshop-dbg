@@ -2,12 +2,13 @@ package main
 
 // The import section defines libraries that we are going to use in our program.
 import (
-	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
+
 	"github.com/ory-am/common/env"
+	"github.com/gorilla/mux"
+	"encoding/json"
 )
 
 // In a 12 factor app, we must obey the environment variables.
@@ -67,7 +68,7 @@ func main() {
 
 	// Start up the server and check for errors.
 	listenOn := fmt.Sprintf("%s:%s", envHost, envPort)
-	err := http.ListenAndServe(listenOn :=, router)
+	err := http.ListenAndServe(listenOn, router)
 	if err != nil {
 		log.Fatalf("Could not set up server because %s", err)
 	}

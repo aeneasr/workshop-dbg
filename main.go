@@ -6,9 +6,10 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/ory-am/common/env"
-	"github.com/gorilla/mux"
 	"encoding/json"
+	"github.com/gorilla/mux"
+	"github.com/ory-am/common/env"
+	"github.com/rs/cors"
 )
 
 // In a 12 factor app, we must obey the environment variables.
@@ -66,9 +67,12 @@ func main() {
 	// Print some information.
 	fmt.Printf("Listening on %s\n", "http://localhost:5678")
 
+	// Cross origin resource requests
+	c := cors.New(cors.Options{AllowedOrigins: []string{"*"}})
+
 	// Start up the server and check for errors.
 	listenOn := fmt.Sprintf("%s:%s", envHost, envPort)
-	err := http.ListenAndServe(listenOn, router)
+	err := http.ListenAndServe(listenOn, c.Handler(router))
 	if err != nil {
 		log.Fatalf("Could not set up server because %s", err)
 	}

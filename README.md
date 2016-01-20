@@ -113,7 +113,7 @@ You can now skip ahead to [Installing JetBrains IntelliJ IDEA on Windows](#insta
 Installing Go on OSX is straight forward. You can leave all defaults as-is. Once Go is installed, you should
 see a screen similar to this one:
 
-![mac-go-success]
+![](docs/mac-go-success.png)
 
 You can now skip ahead to [Installing JetBrains IntelliJ IDEA on OSX](#installing-jetbrains-intellij-idea-on-osx).
 

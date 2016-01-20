@@ -54,8 +54,9 @@ func TestAddContacts(t *testing.T) {
 	ts := httptest.NewServer(router)
 
 	// Make the request
-	_, _, errs := gorequest.New().Post(ts.URL + "/contacts").SendStruct(mockContact).End()
+	resp, _, errs := gorequest.New().Post(ts.URL + "/contacts").SendStruct(mockContact).End()
 	require.Len(t, errs, 0)
+	require.Equal(t, http.StatusOK, resp.StatusCode)
 	require.Equal(t, contactListForThisTest[mockContact.ID], mockContact)
 }
 
@@ -65,14 +66,15 @@ func TestDeleteContacts(t *testing.T) {
 
 	// Initialize the HTTP routes, similar to main()
 	router := mux.NewRouter()
-	router.HandleFunc("/contacts", AddContact(contactListForThisTest)).Methods("DELETE")
+	router.HandleFunc("/contacts/{id}", DeleteContact(contactListForThisTest)).Methods("DELETE")
 	ts := httptest.NewServer(router)
 
 	// Make the request
-	_, _, errs := gorequest.New().Delete(ts.URL + "/contacts/john-bravo").End()
+	resp, _, errs := gorequest.New().Delete(ts.URL + "/contacts/john-bravo").End()
 	require.Len(t, errs, 0)
+	require.Equal(t, http.StatusNoContent, resp.StatusCode)
 
-	_, found := contactListForThisTest[mockContact.ID]
+	_, found := contactListForThisTest["john-bravo"]
 	require.False(t, found)
 }
 
@@ -82,12 +84,13 @@ func TestUpdateContacts(t *testing.T) {
 
 	// Initialize the HTTP routes, similar to main()
 	router := mux.NewRouter()
-	router.HandleFunc("/contacts", AddContact(contactListForThisTest)).Methods("UPDATE")
+	router.HandleFunc("/contacts/{id}", UpdateContact(contactListForThisTest)).Methods("PUT")
 	ts := httptest.NewServer(router)
 
 	// Make the request
-	_, _, errs := gorequest.New().Put(ts.URL + "/contacts/john-bravo").SendStruct(mockContact).End()
+	resp, _, errs := gorequest.New().Put(ts.URL + "/contacts/john-bravo").SendStruct(mockContact).End()
 	require.Len(t, errs, 0)
+	require.Equal(t, http.StatusOK, resp.StatusCode)
 
 	// The new contact should be inserted
 	_, found := contactListForThisTest[mockContact.ID]

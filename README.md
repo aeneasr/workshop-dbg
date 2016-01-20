@@ -47,21 +47,21 @@ the Linux Kernel Development got out of hand and a better VCS was needed.
 Unfortunately, Microsoft *might* block the installation of Git. This is due to missing certificates, as most open source
 projects do not have the resources to buy such an certificate from Microsoft. If you see an error like this one
 
-![docs/win-prevents-git-install.png]
+!()[docs/win-prevents-git-install.png]
 
 there is no need to worry. Git has been around for years and is used by hundreds of thousands of developers every day
 and is completely open source and peer reviewed. To override the faulty Windows SmartScreen, click on **More info**
 
-![docs/win-prevents-git-install-override.png]
+!()[docs/win-prevents-git-install-override.png]
 
 and press **Run anyway**. Now, the installer should start.
 
-![docs/git-install-windows.png]
+!()[docs/git-install-windows.png]
 
 There is no need for customization while installing and you can simply use the default settings
 by pressing **Next >**. When the installer is done, you should see this:
 
-![docs/git-install-windows-success.png]
+!()[docs/git-install-windows-success.png]
 
 Congratulations, you have now installed the tool that every developer has on your machine.
 
@@ -85,7 +85,7 @@ like Docker, Cloud Foundry or Kubernetes are written primarily in Go.
 Installing Go on Windows is straight forward. You can leave all defaults as-is. Once Go is installed, you should
 see a screen similar to this one:
 
-![docs/win-go-install.png]
+!()[docs/win-go-install.png]
 
 #### Installing Go on OSX
 

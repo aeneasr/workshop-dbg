@@ -9,14 +9,18 @@
 
 - [Prerequisites](#prerequisites)
 - [Setting up your development environment](#setting-up-your-development-environment)
-- [Git](#git)
-  - [Installing Git on Windows](#installing-git-on-windows)
-  - [Installing Git on OSX](#installing-git-on-osx)
-- [Google's Go Language](#googles-go-language)
-  - [Installing Go on Windows](#installing-go-on-windows)
-  - [Installing Go on OSX](#installing-go-on-osx)
-- [JetBrains IntelliJ IDEA](#jetbrains-intellij-idea)
-- [Setting up your development environment (OSX)](#setting-up-your-development-environment-osx)
+  - [Git](#git)
+    - [Installing Git on Windows](#installing-git-on-windows)
+    - [Installing Git on OSX](#installing-git-on-osx)
+  - [Google's Go Language](#googles-go-language)
+    - [Installing Go on Windows](#installing-go-on-windows)
+    - [Installing Go on OSX](#installing-go-on-osx)
+  - [JetBrains IntelliJ IDEA](#jetbrains-intellij-idea)
+    - [Installing JetBrains IntelliJ IDEA on Windows](#installing-jetbrains-intellij-idea-on-windows)
+    - [Installing JetBrains IntelliJ IDEA on OSX](#installing-jetbrains-intellij-idea-on-osx)
+- [Wiring it all together](#wiring-it-all-together)
+  - [Windows](#windows)
+  - [Mac OSX](#mac-osx)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -91,19 +95,69 @@ see a screen similar to this one:
 
 ### JetBrains IntelliJ IDEA
 
-## Setting up your development environment (OSX)
+JetBrains IntelliJ IDEA is an IDE aimed at Java developers. JetBrains has various IDEs for all sorts of programming
+languages including Ruby, JavaScript, PHP and others. IntelliJ is my personal favorite and has superb support for Google
+Go.
+
+#### Installing JetBrains IntelliJ IDEA on Windows
+
+The set up is straight forward. You can leave all defaults as-is. Once Go is installed, you should see a screen similar to this one:
+
+![](docs/win-intellij-install.png)
+
+#### Installing JetBrains IntelliJ IDEA on OSX
+
+## Wiring it all together
+
+The hardest part is wiring it all together because each environment (your PC) is unique in it's configuration. There
+are a couple of things that need to be done now.
+
+### Go on Windows
+
+There are a few things we need to do on Windows to get things running. First, we need to set up your workspace.
+To do so, create a `workspace` directory anywhere on your disk. I keep mine in my home directory at
+`C:\Users\aeneas\workspace`. Because we are working with go, it is a good idea to create a subdirectory called `go` as
+well `C:\Users\aeneas\workspace\go`.
+
+Now we need to tell Go where this directory is by setting up an environment variable. Open the Windows start menu,
+search for "environment variables" and click on "Edit the system environment variables":
+
+![](docs/win-env-path-1.png)
+
+![](docs/win-env-path-2.png)
+
+Next, click on "Environment Variables" and then on "New" in the "System variables" section:
+
+![](docs/win-env-path-3.png)
+
+![](docs/win-env-path-4.png)
+
+Now we will set the GOPATH by using `GOPATH` as "Variable name" and the path to your go workspace as "Variable value":
+
+![](docs/win-env-path-5.png)
+
+Congratulations! You just completed setting up Go! Next we will initialize IntelliJ and once that is done, we are ready
+to run and modify some code!
+
+### Go on Mac OSX
+
+### IntelliJ on all platforms
+
+Next, we need to set up IntelliJ and Go. The following screens should guide you through the process
+
+![](docs/win-intellij-1.png)
+
+![](docs/win-intellij-2.png)
+
+![](docs/win-intellij-3.png)
+
+Now hit install and "Restart IntelliJ" once the set up has completed.
+
+You are now geared up to check out check out a Git repository, make changes to the code base and push them back
+to the cloud!
 
 
-Before we jum
-
-To do: Check intellij, git etc. on a clean machine
-
-Prerequisites
-+ Go
-+ Set up GOPATH
-+ Git / github ui
-+ IntelliJ IDEA & Go Plugin for IntelliJ
-+ Set up GitHub account
+**Remove me section**
 
 Introductory tasks
 + Set up workspace (= gopath)

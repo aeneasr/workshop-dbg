@@ -12,4 +12,4 @@ install:
 
 script:
   - gotestcover -coverprofile="cover.out" -race -covermode="count" ./...
-  - goveralls -coverprofile="cover.out"
+  # - goveralls -coverprofile="cover.out"

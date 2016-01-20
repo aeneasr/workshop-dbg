@@ -7,9 +7,10 @@ import (
 	"net/http"
 
 	"encoding/json"
-	"github.com/gorilla/mux"
-	"github.com/ory-am/common/env"
 	"github.com/rs/cors"
+	"github.com/gorilla/mux"
+	"github.com/ory-am/common/pkg"
+	"github.com/ory-am/common/env"
 )
 
 // In a 12 factor app, we must obey the environment variables.
@@ -31,24 +32,21 @@ type Contact struct {
 }
 
 // Contacts is a list of contact structs.
-type Contacts []Contact
+type Contacts map[string]Contact
 
-// myContacts is an exemplary
+// MyContacts is an exemplary list of contacts.
 var MyContacts = Contacts{
-	{
-		ID:         "john-bravo",
+	"john-bravo": Contact{
 		Name:       "John Bravo",
 		Department: "IT",
 		Company:    "ACME Inc",
 	},
-	{
-		ID:         "cathrine-mueller",
+	"cathrine-mueller": Contact{
 		Name:       "Cathrine Müller",
 		Department: "HR",
 		Company:    "Grove AG",
 	},
-	{
-		ID:         "john-bravo",
+	"maximilian-schmidt": Contact{
 		Name:       "Maximilian Schmidt",
 		Department: "PR",
 		Company:    "Titanpad AG",
@@ -60,9 +58,15 @@ func main() {
 	// Create a new router.
 	router := mux.NewRouter()
 
-	// Requests to "/" are by method listContacts.
-	router.HandleFunc("/", ListContacts(&MyContacts)).Methods("GET")
-	router.HandleFunc("/", AddContact(&MyContacts)).Methods("POST")
+	// RESTful defines operations
+	// * GET for fetching data
+	// * POST for inserting data
+	// * PUT for updating existing data
+	// * DELETE for deleting data
+	router.HandleFunc("/contacts/{id}", UpdateContact(MyContacts)).Methods("PUT")
+	router.HandleFunc("/contacts/{id}", DeleteContact(MyContacts)).Methods("DELETE")
+	router.HandleFunc("/contacts", ListContacts(MyContacts)).Methods("GET")
+	router.HandleFunc("/contacts", AddContact(MyContacts)).Methods("POST")
 
 	// Print some information.
 	fmt.Printf("Listening on %s\n", "http://localhost:5678")
@@ -78,41 +82,92 @@ func main() {
 	}
 }
 
-// listContacts takes a contact list and outputs it.
-func ListContacts(contacts *Contacts) func(rw http.ResponseWriter, r *http.Request) {
+// ListContacts takes a contact list and outputs it.
+func ListContacts(contacts Contacts) func(rw http.ResponseWriter, r *http.Request) {
 	return func(rw http.ResponseWriter, r *http.Request) {
-		output, err := json.MarshalIndent(contacts, "", "\t")
 
-		// If an error occurs, handle it.
-		if err != nil {
-			http.Error(rw, fmt.Sprintf("Could not read vcards because %s", err), http.StatusInternalServerError)
-			return
-		}
-
-		rw.Write(output)
+		// Write contact list to output
+		pkg.WriteIndentJSON(rw, contacts)
 	}
 }
 
-// addContact will add a contact to the list
-func AddContact(contacts *Contacts) func(rw http.ResponseWriter, r *http.Request) {
+// AddContact will add a contact to the list
+func AddContact(contacts Contacts) func(rw http.ResponseWriter, r *http.Request) {
 	return func(rw http.ResponseWriter, r *http.Request) {
 
-		// newContact poses as a placeholder for the contact that the request is going to add.
-		var newContact Contact
+		// We parse the request's information into contactToBeAdded
+		contactToBeAdded, err := ReadContactData(rw, r)
 
-		// We decode the information and "inject" it to newContact.
-		err := json.NewDecoder(r.Body).Decode(&newContact)
-
-		// If an error occurs while decoding, handle it.
+		// Abort handling the request if an error occurs.
 		if err != nil {
-			http.Error(rw, fmt.Sprintf("Could not read vcards because %s", err), http.StatusInternalServerError)
 			return
 		}
 
-		// Save newContact to the list of available contacts.
-		*contacts = append(*contacts, newContact)
+		// Save newContact to the list of contacts.
+		contacts[contactToBeAdded.ID] = contactToBeAdded
 
-		// Per specification, RESTful may return an empty response when a POST request was successful
+		// Output our newly created contact
+		pkg.WriteIndentJSON(rw, contactToBeAdded)
+	}
+}
+
+// DeleteContact will delete a contact from the list
+func DeleteContact(contacts Contacts) func(rw http.ResponseWriter, r *http.Request) {
+	return func(rw http.ResponseWriter, r *http.Request) {
+		// Fetch the ID of the contact that is going to be deleted
+		contactToBeDeleted := mux.Vars(r)["id"]
+
+		// Check if the contact exists and return an error if not
+		if _, found := contacts[contactToBeDeleted]; !found {
+			http.Error(rw, "I do not know any contact by that ID.", http.StatusNotFound)
+			return
+		}
+
+		// Delete the contact from the list
+		delete(contacts, contactToBeDeleted)
+
+		// Per specification, RESTful may return an empty response when a DELETE request was successful
 		rw.WriteHeader(http.StatusNoContent)
 	}
+}
+
+// UpdateContact will update a contact on the list
+func UpdateContact(contacts Contacts) func(rw http.ResponseWriter, r *http.Request) {
+	return func(rw http.ResponseWriter, r *http.Request) {
+		// Fetch the ID of the contact that is going to be updated
+		contactToBeUpdated := mux.Vars(r)["id"]
+
+		// Check if the contact exists
+		if _, found := contacts[contactToBeUpdated]; !found {
+			http.Error(rw, "I don't know any contact by that ID.", http.StatusNotFound)
+			return
+		}
+
+		// We parse the request's information into newContactData.
+		newContactData, err := ReadContactData(rw, r)
+
+		// Abort handling the request if an error occurs.
+		if err != nil {
+			return
+		}
+
+		// Update the data in the contact list.
+		delete(contacts, contactToBeUpdated)
+		contacts[newContactData.ID] = newContactData
+
+		// Set the new data
+		pkg.WriteIndentJSON(rw, newContactData)
+	}
+}
+
+// ReadContactData is a helper function for parsing a HTTP request body. It returns a contact on success and an
+// error if something went wrong.
+func ReadContactData(rw http.ResponseWriter, r *http.Request) (contact Contact, err error) {
+	err = json.NewDecoder(r.Body).Decode(&contact)
+	if err != nil {
+		http.Error(rw, fmt.Sprintf("Could not read input data because %s", err), http.StatusBadRequest)
+		return contact, err
+	}
+
+	return contact, nil
 }

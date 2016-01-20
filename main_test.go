@@ -13,13 +13,13 @@ import (
 )
 
 var mockedContactList = Contacts{
-	{
+	"john-bravo": Contact{
 		ID:         "john-bravo",
 		Name:       "John Bravo",
 		Department: "IT",
 		Company:    "ACME Inc",
 	},
-	{
+	"cathrine-mueller": Contact{
 		ID:         "cathrine-mueller",
 		Name:       "Cathrine Müller",
 		Department: "HR",
@@ -37,7 +37,7 @@ var mockContact = Contact{
 func TestListContacts(t *testing.T) {
 	// Initialize everything (very similar to main() function).
 	router := mux.NewRouter()
-	router.HandleFunc("/", ListContacts(&mockedContactList)).Methods("GET")
+	router.HandleFunc("/contacts", ListContacts(mockedContactList)).Methods("GET")
 	ts := httptest.NewServer(router)
 
 	// This helper function makes an http request to ListContacts and validates its output.
@@ -45,25 +45,62 @@ func TestListContacts(t *testing.T) {
 }
 
 func TestAddContacts(t *testing.T) {
+	// We create a copy of the store
+	contactListForThisTest := copyContacts(mockedContactList)
+
+	// Initialize the HTTP routes, similar to main()
 	router := mux.NewRouter()
-	router.HandleFunc("/", AddContact(&mockedContactList)).Methods("POST")
-	router.HandleFunc("/", ListContacts(&mockedContactList)).Methods("GET")
+	router.HandleFunc("/contacts", AddContact(contactListForThisTest)).Methods("POST")
 	ts := httptest.NewServer(router)
 
-	// We are expecting that our new contact is now in the list of contacts.
-	expectContactList := append(mockedContactList, mockContact)
-
-	_, body, errs := gorequest.New().Post(ts.URL).SendStruct(mockContact).End()
+	// Make the request
+	_, _, errs := gorequest.New().Post(ts.URL + "/contacts").SendStruct(mockContact).End()
 	require.Len(t, errs, 0)
-	require.Empty(t, body)
+	require.Equal(t, contactListForThisTest[mockContact.ID], mockContact)
+}
 
-	// Like in TestListContacts, this helper function makes an http request to ListContacts and validates its output.
-	fetchAndTestContactList(t, ts, expectContactList)
+func TestDeleteContacts(t *testing.T) {
+	// We create a copy of the store
+	contactListForThisTest := copyContacts(mockedContactList)
+
+	// Initialize the HTTP routes, similar to main()
+	router := mux.NewRouter()
+	router.HandleFunc("/contacts", AddContact(contactListForThisTest)).Methods("DELETE")
+	ts := httptest.NewServer(router)
+
+	// Make the request
+	_, _, errs := gorequest.New().Delete(ts.URL + "/contacts/john-bravo").End()
+	require.Len(t, errs, 0)
+
+	_, found := contactListForThisTest[mockContact.ID]
+	require.False(t, found)
+}
+
+func TestUpdateContacts(t *testing.T) {
+	// We create a copy of the store
+	contactListForThisTest := copyContacts(mockedContactList)
+
+	// Initialize the HTTP routes, similar to main()
+	router := mux.NewRouter()
+	router.HandleFunc("/contacts", AddContact(contactListForThisTest)).Methods("UPDATE")
+	ts := httptest.NewServer(router)
+
+	// Make the request
+	_, _, errs := gorequest.New().Put(ts.URL + "/contacts/john-bravo").SendStruct(mockContact).End()
+	require.Len(t, errs, 0)
+
+	// The new contact should be inserted
+	_, found := contactListForThisTest[mockContact.ID]
+	require.True(t, found)
+
+	// The old one should be removed
+	_, found = contactListForThisTest["john-bravo"]
+	require.False(t, found)
 }
 
 func fetchAndTestContactList(t *testing.T, ts *httptest.Server, compareWith Contacts) {
 	// Request ListContacts
-	resp, err := http.Get(ts.URL)
+	resp, err := http.Get(ts.URL + "/contacts")
 
 	// Verify that no errors occurred
 	require.Nil(t, err)
@@ -77,4 +114,12 @@ func fetchAndTestContactList(t *testing.T, ts *httptest.Server, compareWith Cont
 
 	// Compare the outputs
 	assert.Equal(t, compareWith, result)
+}
+
+func copyContacts(original Contacts) Contacts {
+	result := Contacts{}
+	for k, v := range original {
+		result[k] = v
+	}
+	return result
 }

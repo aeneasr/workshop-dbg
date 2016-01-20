@@ -1,13 +1,19 @@
 {
 	"ImportPath": "github.com/ory-am/workshop-dbg",
 	"GoVersion": "go1.5.1",
-	"Packages": [
-		"."
-	],
 	"Deps": [
+		{
+			"ImportPath": "github.com/Sirupsen/logrus",
+			"Comment": "v0.8.7-53-g446d1c1",
+			"Rev": "446d1c146faa8ed3f4218f056fcd165f6bcfda81"
+		},
 		{
 			"ImportPath": "github.com/davecgh/go-spew/spew",
 			"Rev": "5215b55f46b2b919f50a1df0eaa5886afe4e3b3d"
+		},
+		{
+			"ImportPath": "github.com/go-errors/errors",
+			"Rev": "a41850380601eeb43f4350f7d17c6bbd8944aaf8"
 		},
 		{
 			"ImportPath": "github.com/gorilla/context",
@@ -18,7 +24,16 @@
 			"Rev": "9c068cf16d982f8bd444b8c352acbeec34c4fe5b"
 		},
 		{
+			"ImportPath": "github.com/oleiade/reflections",
+			"Comment": "0.1.2-2-g632977f",
+			"Rev": "632977f98cd34d217c4b57d0840ec188b3d3dcaf"
+		},
+		{
 			"ImportPath": "github.com/ory-am/common/env",
+			"Rev": "930cc805232909c38f2e68310b1e21f71b056d59"
+		},
+		{
+			"ImportPath": "github.com/ory-am/common/pkg",
 			"Rev": "930cc805232909c38f2e68310b1e21f71b056d59"
 		},
 		{

@@ -1,6 +1,9 @@
 {
 	"ImportPath": "github.com/ory-am/workshop-dbg",
-	"GoVersion": "go1.5.1",
+	"GoVersion": "go1.5.3",
+	"Packages": [
+		"."
+	],
 	"Deps": [
 		{
 			"ImportPath": "github.com/Sirupsen/logrus",
@@ -40,6 +43,10 @@
 			"ImportPath": "github.com/parnurzeal/gorequest",
 			"Comment": "v0.2.11",
 			"Rev": "8fe8e16b3c50b6cc37399ee385b15f62a20bf584"
+		},
+		{
+			"ImportPath": "github.com/pborman/uuid",
+			"Rev": "cccd189d45f7ac3368a0d127efb7f4d08ae0b655"
 		},
 		{
 			"ImportPath": "github.com/pmezard/go-difflib/difflib",

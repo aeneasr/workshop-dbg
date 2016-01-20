@@ -20,6 +20,10 @@ var envPort = env.Getenv("PORT", "5678")
 
 // Contact defines the structure of a contact which including name, department and company.
 type Contact struct {
+	// The unique identifier of this contact.
+	// omitempty hides this field when exporting to json. Because it is common for json
+	// to be lowercase, we additionally define `json:"id"` to tell the "exporter" that this
+	// field should be called id, not ID.
 	ID         string `json:"id,omitempty"`
 
 	// Name is the contact's full name.
@@ -30,13 +34,17 @@ type Contact struct {
 
 	// Company is the name of the company the contact works for.
 	Company    string `json:"company"`
+
+	// Here is room for improvements like adding new fields
 }
 
-// Contacts is a list of contact structs.
+// Contacts is a list of contacts.
 type Contacts map[string]Contact
 
 // MyContacts is an exemplary list of contacts.
 var MyContacts = Contacts{
+	// Each contact hs identified by its ID which is prepended with "my-id":
+	// We are doing this because it is easier to manage and simpler to read.
 	"john-bravo": Contact{
 		Name:       "John Bravo",
 		Department: "IT",
@@ -67,10 +75,10 @@ func main() {
 	router.HandleFunc("/contacts", ListContacts(MyContacts)).Methods("GET")
 	router.HandleFunc("/contacts/{id}", UpdateContact(MyContacts)).Methods("PUT")
 
-	// The info endpoint is for showing demonstration purposes only
+	// The info endpoint is for showing demonstration purposes only and is not subject to any task.
 	router.HandleFunc("/info", InfoHandler).Methods("GET")
 
-	// Print some information.
+	// Print where to point the browser at.
 	fmt.Printf("Listening on %s\n", "http://localhost:5678")
 
 	// Cross origin resource requests

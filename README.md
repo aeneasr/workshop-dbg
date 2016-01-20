@@ -174,7 +174,7 @@ to run and modify some code!
 There are a few things we need to do on OSX to get things running. First, open
 the terminal. To do so, open the terminal by using spotlight or launchpad search
 
-![](docs/osx-open-terminal.png)
+![](docs/mac-open-terminal.png)
 
 When using developer tools on OSX, Apple forces to use the so called XCode Tools
 which require an Apple account and are 2 GB large. Because only git is needed, we are going

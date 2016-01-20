@@ -63,10 +63,9 @@ func main() {
 	// * POST for inserting data
 	// * PUT for updating existing data
 	// * DELETE for deleting data
-	router.HandleFunc("/contacts/{id}", UpdateContact(MyContacts)).Methods("PUT")
-	router.HandleFunc("/contacts/{id}", DeleteContact(MyContacts)).Methods("DELETE")
 	router.HandleFunc("/contacts", ListContacts(MyContacts)).Methods("GET")
-	router.HandleFunc("/contacts", AddContact(MyContacts)).Methods("POST")
+
+	router.HandleFunc("/contacts/{id}", UpdateContact(MyContacts)).Methods("PUT")
 
 	// Print some information.
 	fmt.Printf("Listening on %s\n", "http://localhost:5678")

@@ -11,6 +11,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/ory-am/common/pkg"
 	"github.com/ory-am/common/env"
+	"github.com/pborman/uuid"
 )
 
 // In a 12 factor app, we must obey the environment variables.
@@ -64,8 +65,10 @@ func main() {
 	// * PUT for updating existing data
 	// * DELETE for deleting data
 	router.HandleFunc("/contacts", ListContacts(MyContacts)).Methods("GET")
-
 	router.HandleFunc("/contacts/{id}", UpdateContact(MyContacts)).Methods("PUT")
+
+	// The info endpoint is for showing demonstration purposes only
+	router.HandleFunc("/info", InfoHandler).Methods("GET")
 
 	// Print some information.
 	fmt.Printf("Listening on %s\n", "http://localhost:5678")
@@ -172,4 +175,10 @@ func ReadContactData(rw http.ResponseWriter, r *http.Request) (contact Contact, 
 	}
 
 	return contact, nil
+}
+
+var thisID = uuid.New()
+
+func InfoHandler(rw http.ResponseWriter, r *http.Request) {
+	rw.Write([]byte(thisID))
 }

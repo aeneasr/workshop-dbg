@@ -19,16 +19,16 @@ var envPort = env.Getenv("PORT", "5678")
 
 // Contact defines the structure of a contact which including name, department and company.
 type Contact struct {
-	ID string `json:"id"`
+	ID         string `json:"id,omitempty"`
 
 	// Name is the contact's full name.
-	Name string `json:"name"`
+	Name       string `json:"name"`
 
 	// Department is the contact's department in a company.
 	Department string `json:"department"`
 
 	// Company is the name of the company the contact works for.
-	Company string `json:"company"`
+	Company    string `json:"company"`
 }
 
 // Contacts is a list of contact structs.
@@ -72,7 +72,10 @@ func main() {
 	fmt.Printf("Listening on %s\n", "http://localhost:5678")
 
 	// Cross origin resource requests
-	c := cors.New(cors.Options{AllowedOrigins: []string{"*"}})
+	c := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"},
+		AllowedMethods: []string{"GET", "POST", "DELETE", "PUT"}},
+	)
 
 	// Start up the server and check for errors.
 	listenOn := fmt.Sprintf("%s:%s", envHost, envPort)

@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/ory-am/workshop-dbg.svg?branch=master)](https://travis-ci.org/ory-am/workshop-dbg)
 [![Coverage Status](https://coveralls.io/repos/github/ory-am/workshop-dbg/badge.svg?branch=master)](https://coveralls.io/github/ory-am/workshop-dbg?branch=master)
-
+test
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**

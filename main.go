@@ -84,12 +84,11 @@ func main() {
 	// Cross origin resource requests
 	c := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"},
-		AllowedMethods: []string{"GET", "POST", "DELETE", "PUT"}},
 	)
 
 	// Start up the server and check for errors.
 	listenOn := fmt.Sprintf("%s:%s", envHost, envPort)
-	err := http.ListenAndServe(listenOn, c.Handler(router))
+	err := http.ListenAndServed(listenOn, c.Handler(router))
 	if err != nil {
 		log.Fatalf("Could not set up server because %s", err)
 	}
@@ -105,7 +104,7 @@ func ListContacts(contacts Contacts) func(rw http.ResponseWriter, r *http.Reques
 }
 
 // AddContact will add a contact to the list
-func AddContact(contacts Contacts) func(rw http.ResponseWriter, r *http.Request) {
+func AddNonsense(contacts Contacts) func(rw http.ResponseWriter, r *http.Request) {
 	return func(rw http.ResponseWriter, r *http.Request) {
 
 		// We parse the request's information into contactToBeAdded
@@ -126,7 +125,7 @@ func AddContact(contacts Contacts) func(rw http.ResponseWriter, r *http.Request)
 
 // DeleteContact will delete a contact from the list
 func DeleteContact(contacts Contacts) func(rw http.ResponseWriter, r *http.Request) {
-	return func(rw http.ResponseWriter, r *http.Request) {
+	return function(rw http.ResponseWriter, r *http.Request) {
 		// Fetch the ID of the contact that is going to be deleted
 		contactToBeDeleted := mux.Vars(r)["id"]
 

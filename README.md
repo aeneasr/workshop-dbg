@@ -7,6 +7,8 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**
 
+test
+
 - [Prerequisites](#prerequisites)
 - [Setting up your development environment](#setting-up-your-development-environment)
   - [Git](#git)

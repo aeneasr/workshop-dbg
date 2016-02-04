@@ -46,7 +46,7 @@ var MyContacts = Contacts{
 	// Each contact hs identified by its ID which is prepended with "my-id":
 	// We are doing this because it is easier to manage and simpler to read.
 	"john-bravo": Contact{
-		Name:       "John Bravo",
+		Name:       "Andreas Preuss",
 		Department: "IT",
 		Company:    "ACME Inc",
 	},
@@ -59,6 +59,11 @@ var MyContacts = Contacts{
 		Name:       "Maximilian Schmidt",
 		Department: "PR",
 		Company:    "Titanpad AG",
+	},
+	"uwe-charly": Contact{
+		Name:       "Uwe Charly",
+		Department: "FAC",
+		Company:    "KPMG",
 	},
 }
 

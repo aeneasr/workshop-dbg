@@ -13,11 +13,13 @@ Prerequisites
 + Git / github ui
 + IntelliJ IDEA & Go Plugin for IntelliJ
 + Set up GitHub account
++ Check user profile settings
++ Folow https://github.com/ory-am/workshop-dbg
 
 Introductory tasks
-+ Set up workspace (= gopath)
-+ fork the project
-+ clone the project using github ui
++ Set up workspace (= GOPATH)
++ Fork the project
++ Clone the project using github ui
 + Use Postman to make some requests
   + get
   + post
@@ -25,7 +27,7 @@ Introductory tasks
 
 Tasks
 + Modify contacts to represent the group (leave the *how* open)
-+ Push to fork and
++ Push to fork and submit pull request
 
 Deploy to heroku or flynn
 

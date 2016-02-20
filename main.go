@@ -12,6 +12,8 @@ import (
 	"github.com/ory-am/common/pkg"
 	"github.com/ory-am/common/env"
 	"github.com/pborman/uuid"
+	"math"
+	"strconv"
 )
 
 // In a 12 factor app, we must obey the environment variables.
@@ -82,6 +84,7 @@ func main() {
 
 	// The info endpoint is for showing demonstration purposes only and is not subject to any task.
 	router.HandleFunc("/info", InfoHandler).Methods("GET")
+	router.HandleFunc("/pi", ComputePi).Methods("GET")
 
 	// Print where to point the browser at.
 	fmt.Printf("Listening on %s\n", "http://localhost:5678")
@@ -188,6 +191,39 @@ func ReadContactData(rw http.ResponseWriter, r *http.Request) (contact Contact, 
 	}
 
 	return contact, nil
+}
+
+func ComputePi(rw http.ResponseWriter, r *http.Request) {
+	n, err := strconv.Atoi(r.URL.Query().Get("n"))
+	if err != nil {
+		n = 0
+	}
+
+	pkg.WriteIndentJSON(rw, struct {
+		Pi string `json:"pi"`
+		N  int `json:"n"`
+	}{
+		Pi: strconv.FormatFloat(pi(n), 'E', -1, 64),
+		N: n,
+	})
+}
+
+// pi launches n goroutines to compute an
+// approximation of pi.
+func pi(n int) float64 {
+	ch := make(chan float64)
+	for k := 0; k <= n; k++ {
+		go term(ch, float64(k))
+	}
+	f := 0.0
+	for k := 0; k <= n; k++ {
+		f += <-ch
+	}
+	return f
+}
+
+func term(ch chan float64, k float64) {
+	ch <- 4 * math.Pow(-1, k) / (2 * k + 1)
 }
 
 var thisID = uuid.New()

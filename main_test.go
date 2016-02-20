@@ -101,6 +101,25 @@ func TestUpdateContacts(t *testing.T) {
 	require.False(t, found)
 }
 
+func TestPi(t *testing.T) {
+	// Initialize the HTTP routes, similar to main()
+	router := mux.NewRouter()
+	router.HandleFunc("/pi", ComputePi).Methods("GET")
+	ts := httptest.NewServer(router)
+
+	// Make the request
+	resp, body, errs := gorequest.New().Get(ts.URL + "/pi?n=100").End()
+	require.Len(t, errs, 0)
+	require.Equal(t, http.StatusOK, resp.StatusCode)
+
+	res := struct {
+		Pi string `json:"pi"`
+		N int `json:"n"`
+	}{}
+	require.Nil(t, json.Unmarshal([]byte(body), &res))
+	assert.Equal(t, 100, res.N)
+}
+
 func fetchAndTestContactList(t *testing.T, ts *httptest.Server, compareWith Contacts) {
 	// Request ListContacts
 	resp, err := http.Get(ts.URL + "/contacts")

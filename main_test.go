@@ -7,19 +7,21 @@ import (
 	"testing"
 
 	"github.com/gorilla/mux"
+	. "github.com/ory-am/workshop-dbg/store"
+	"github.com/ory-am/workshop-dbg/store/memory"
 	"github.com/parnurzeal/gorequest"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 var mockedContactList = Contacts{
-	"john-bravo": Contact{
+	"john-bravo": &Contact{
 		ID:         "john-bravo",
 		Name:       "John Bravo",
 		Department: "IT",
 		Company:    "ACME Inc",
 	},
-	"cathrine-mueller": Contact{
+	"cathrine-mueller": &Contact{
 		ID:         "cathrine-mueller",
 		Name:       "Cathrine Müller",
 		Department: "HR",
@@ -27,7 +29,7 @@ var mockedContactList = Contacts{
 	},
 }
 
-var mockContact = Contact{
+var mockContact = &Contact{
 	ID:         "eddie-markson",
 	Name:       "Eddie Markson",
 	Department: "Finance",
@@ -35,9 +37,11 @@ var mockContact = Contact{
 }
 
 func TestListContacts(t *testing.T) {
+	store := &memory.InMemoryStore{Contacts: mockedContactList}
+
 	// Initialize everything (very similar to main() function).
 	router := mux.NewRouter()
-	router.HandleFunc("/contacts", ListContacts(mockedContactList)).Methods("GET")
+	router.HandleFunc("/contacts", ListContacts(store)).Methods("GET")
 	ts := httptest.NewServer(router)
 
 	// This helper function makes an http request to ListContacts and validates its output.
@@ -47,10 +51,11 @@ func TestListContacts(t *testing.T) {
 func TestAddContacts(t *testing.T) {
 	// We create a copy of the store
 	contactListForThisTest := copyContacts(mockedContactList)
+	store := &memory.InMemoryStore{Contacts: contactListForThisTest}
 
 	// Initialize the HTTP routes, similar to main()
 	router := mux.NewRouter()
-	router.HandleFunc("/contacts", AddContact(contactListForThisTest)).Methods("POST")
+	router.HandleFunc("/contacts", AddContact(store)).Methods("POST")
 	ts := httptest.NewServer(router)
 
 	// Make the request
@@ -63,10 +68,11 @@ func TestAddContacts(t *testing.T) {
 func TestDeleteContacts(t *testing.T) {
 	// We create a copy of the store
 	contactListForThisTest := copyContacts(mockedContactList)
+	store := &memory.InMemoryStore{Contacts: contactListForThisTest}
 
 	// Initialize the HTTP routes, similar to main()
 	router := mux.NewRouter()
-	router.HandleFunc("/contacts/{id}", DeleteContact(contactListForThisTest)).Methods("DELETE")
+	router.HandleFunc("/contacts/{id}", DeleteContact(store)).Methods("DELETE")
 	ts := httptest.NewServer(router)
 
 	// Make the request
@@ -81,10 +87,11 @@ func TestDeleteContacts(t *testing.T) {
 func TestUpdateContacts(t *testing.T) {
 	// We create a copy of the store
 	contactListForThisTest := copyContacts(mockedContactList)
+	store := &memory.InMemoryStore{Contacts: contactListForThisTest}
 
 	// Initialize the HTTP routes, similar to main()
 	router := mux.NewRouter()
-	router.HandleFunc("/contacts/{id}", UpdateContact(contactListForThisTest)).Methods("PUT")
+	router.HandleFunc("/contacts/{id}", UpdateContact(store)).Methods("PUT")
 	ts := httptest.NewServer(router)
 
 	// Make the request
@@ -95,10 +102,6 @@ func TestUpdateContacts(t *testing.T) {
 	// The new contact should be inserted
 	_, found := contactListForThisTest[mockContact.ID]
 	require.True(t, found)
-
-	// The old one should be removed
-	_, found = contactListForThisTest["john-bravo"]
-	require.False(t, found)
 }
 
 func TestPi(t *testing.T) {
@@ -114,7 +117,7 @@ func TestPi(t *testing.T) {
 
 	res := struct {
 		Pi string `json:"pi"`
-		N int `json:"n"`
+		N  int    `json:"n"`
 	}{}
 	require.Nil(t, json.Unmarshal([]byte(body), &res))
 	assert.Equal(t, 100, res.N)

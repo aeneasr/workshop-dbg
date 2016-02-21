@@ -7,67 +7,54 @@ import (
 	"net/http"
 
 	"encoding/json"
-	"github.com/rs/cors"
 	"github.com/gorilla/mux"
-	"github.com/ory-am/common/pkg"
 	"github.com/ory-am/common/env"
+	"github.com/ory-am/common/pkg"
 	"github.com/pborman/uuid"
+	"github.com/rs/cors"
 	"math"
 	"strconv"
+
+	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
+	. "github.com/ory-am/workshop-dbg/store"
+	"github.com/ory-am/workshop-dbg/store/memory"
+	"github.com/ory-am/workshop-dbg/store/postgres"
 )
 
 // In a 12 factor app, we must obey the environment variables.
 var envHost = env.Getenv("HOST", "")
 var envPort = env.Getenv("PORT", "5678")
-
-// Contact defines the structure of a contact which including name, department and company.
-type Contact struct {
-	// The unique identifier of this contact.
-	// omitempty hides this field when exporting to json. Because it is common for json
-	// to be lowercase, we additionally define `json:"id"` to tell the "exporter" that this
-	// field should be called id, not ID.
-	ID         string `json:"id,omitempty"`
-
-	// Name is the contact's full name.
-	Name       string `json:"name"`
-
-	// Department is the contact's department in a company.
-	Department string `json:"department"`
-
-	// Company is the name of the company the contact works for.
-	Company    string `json:"company"`
-
-	// Here is room for improvements like adding new fields
-}
-
-// Contacts is a list of contacts.
-type Contacts map[string]Contact
+var databaseURL = env.Getenv("DATABASE_URL", "")
+var thisID = uuid.New()
 
 // MyContacts is an exemplary list of contacts.
 var MyContacts = Contacts{
 	// Each contact hs identified by its ID which is prepended with "my-id":
 	// We are doing this because it is easier to manage and simpler to read.
-	"john-bravo": Contact{
+	"john-bravo": &Contact{
 		Name:       "Andreas Preuss",
 		Department: "IT",
 		Company:    "ACME Inc",
 	},
-	"cathrine-mueller": Contact{
+	"cathrine-mueller": &Contact{
 		Name:       "Cathrine Müller",
 		Department: "HR",
 		Company:    "Grove AG",
 	},
-	"maximilian-schmidt": Contact{
+	"maximilian-schmidt": &Contact{
 		Name:       "Maximilian Schmidt",
 		Department: "PR",
 		Company:    "Titanpad AG",
 	},
-	"uwe-charly": Contact{
+	"uwe-charly": &Contact{
 		Name:       "Uwe Charly",
 		Department: "FAC",
 		Company:    "KPMG",
 	},
 }
+
+var memoryStore = &memory.InMemoryStore{Contacts: MyContacts}
 
 // The main routine is going the "entry" point.
 func main() {
@@ -79,8 +66,22 @@ func main() {
 	// * POST for inserting data
 	// * PUT for updating existing data
 	// * DELETE for deleting data
-	router.HandleFunc("/contacts", ListContacts(MyContacts)).Methods("GET")
-	router.HandleFunc("/contacts/{id}", UpdateContact(MyContacts)).Methods("PUT")
+	router.HandleFunc("/memory/contacts", ListContacts(memoryStore)).Methods("GET")
+	router.HandleFunc("/memory/contacts", AddContact(memoryStore)).Methods("POST")
+	router.HandleFunc("/memory/contacts/{id}", UpdateContact(memoryStore)).Methods("PUT")
+	router.HandleFunc("/memory/contacts/{id}", DeleteContact(memoryStore)).Methods("DELETE")
+
+	// Connect to database store
+	db, err := sqlx.Connect("postgres", databaseURL)
+	if err == nil {
+		databaseStore := &postgres.PostgresStore{DB: db}
+		router.HandleFunc("/database/contacts", ListContacts(databaseStore)).Methods("GET")
+		router.HandleFunc("/database/contacts", AddContact(databaseStore)).Methods("POST")
+		router.HandleFunc("/database/contacts/{id}", UpdateContact(databaseStore)).Methods("PUT")
+		router.HandleFunc("/database/contacts/{id}", DeleteContact(databaseStore)).Methods("DELETE")
+	} else {
+		log.Printf("Could not connect to database because %s", err)
+	}
 
 	// The info endpoint is for showing demonstration purposes only and is not subject to any task.
 	router.HandleFunc("/info", InfoHandler).Methods("GET")
@@ -97,23 +98,28 @@ func main() {
 
 	// Start up the server and check for errors.
 	listenOn := fmt.Sprintf("%s:%s", envHost, envPort)
-	err := http.ListenAndServe(listenOn, c.Handler(router))
-	if err != nil {
+	if err := http.ListenAndServe(listenOn, c.Handler(router)); err != nil {
 		log.Fatalf("Could not set up server because %s", err)
 	}
 }
 
 // ListContacts takes a contact list and outputs it.
-func ListContacts(contacts Contacts) func(rw http.ResponseWriter, r *http.Request) {
+func ListContacts(store ContactStorer) func(rw http.ResponseWriter, r *http.Request) {
 	return func(rw http.ResponseWriter, r *http.Request) {
 
 		// Write contact list to output
+		contacts, err := store.FetchContacts()
+		if err != nil {
+			http.Error(rw, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
 		pkg.WriteIndentJSON(rw, contacts)
 	}
 }
 
 // AddContact will add a contact to the list
-func AddContact(contacts Contacts) func(rw http.ResponseWriter, r *http.Request) {
+func AddContact(contacts ContactStorer) func(rw http.ResponseWriter, r *http.Request) {
 	return func(rw http.ResponseWriter, r *http.Request) {
 
 		// We parse the request's information into contactToBeAdded
@@ -121,11 +127,15 @@ func AddContact(contacts Contacts) func(rw http.ResponseWriter, r *http.Request)
 
 		// Abort handling the request if an error occurs.
 		if err != nil {
+			http.Error(rw, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
 		// Save newContact to the list of contacts.
-		contacts[contactToBeAdded.ID] = contactToBeAdded
+		if err = contacts.CreateContact(&contactToBeAdded); err != nil {
+			http.Error(rw, err.Error(), http.StatusInternalServerError)
+			return
+		}
 
 		// Output our newly created contact
 		pkg.WriteIndentJSON(rw, contactToBeAdded)
@@ -133,19 +143,16 @@ func AddContact(contacts Contacts) func(rw http.ResponseWriter, r *http.Request)
 }
 
 // DeleteContact will delete a contact from the list
-func DeleteContact(contacts Contacts) func(rw http.ResponseWriter, r *http.Request) {
+func DeleteContact(contacts ContactStorer) func(rw http.ResponseWriter, r *http.Request) {
 	return func(rw http.ResponseWriter, r *http.Request) {
 		// Fetch the ID of the contact that is going to be deleted
 		contactToBeDeleted := mux.Vars(r)["id"]
 
-		// Check if the contact exists and return an error if not
-		if _, found := contacts[contactToBeDeleted]; !found {
-			http.Error(rw, "I do not know any contact by that ID.", http.StatusNotFound)
+		// Delete the contact from the list
+		if err := contacts.DeleteContact(contactToBeDeleted); err != nil {
+			http.Error(rw, err.Error(), http.StatusInternalServerError)
 			return
 		}
-
-		// Delete the contact from the list
-		delete(contacts, contactToBeDeleted)
 
 		// Per specification, RESTful may return an empty response when a DELETE request was successful
 		rw.WriteHeader(http.StatusNoContent)
@@ -153,28 +160,22 @@ func DeleteContact(contacts Contacts) func(rw http.ResponseWriter, r *http.Reque
 }
 
 // UpdateContact will update a contact on the list
-func UpdateContact(contacts Contacts) func(rw http.ResponseWriter, r *http.Request) {
+func UpdateContact(store ContactStorer) func(rw http.ResponseWriter, r *http.Request) {
 	return func(rw http.ResponseWriter, r *http.Request) {
-		// Fetch the ID of the contact that is going to be updated
-		contactToBeUpdated := mux.Vars(r)["id"]
-
-		// Check if the contact exists
-		if _, found := contacts[contactToBeUpdated]; !found {
-			http.Error(rw, "I don't know any contact by that ID.", http.StatusNotFound)
-			return
-		}
-
 		// We parse the request's information into newContactData.
 		newContactData, err := ReadContactData(rw, r)
 
 		// Abort handling the request if an error occurs.
 		if err != nil {
+			http.Error(rw, err.Error(), http.StatusBadRequest)
 			return
 		}
 
 		// Update the data in the contact list.
-		delete(contacts, contactToBeUpdated)
-		contacts[newContactData.ID] = newContactData
+		if err := store.UpdateContact(&newContactData); err != nil {
+			http.Error(rw, err.Error(), http.StatusInternalServerError)
+			return
+		}
 
 		// Set the new data
 		pkg.WriteIndentJSON(rw, newContactData)
@@ -201,11 +202,15 @@ func ComputePi(rw http.ResponseWriter, r *http.Request) {
 
 	pkg.WriteIndentJSON(rw, struct {
 		Pi string `json:"pi"`
-		N  int `json:"n"`
+		N  int    `json:"n"`
 	}{
 		Pi: strconv.FormatFloat(pi(n), 'E', -1, 64),
-		N: n,
+		N:  n,
 	})
+}
+
+func InfoHandler(rw http.ResponseWriter, r *http.Request) {
+	rw.Write([]byte(thisID))
 }
 
 // pi launches n goroutines to compute an
@@ -220,10 +225,4 @@ func pi(n int) float64 {
 
 func term(k float64) float64 {
 	return 4 * math.Pow(-1, k) / (2*k + 1)
-}
-
-var thisID = uuid.New()
-
-func InfoHandler(rw http.ResponseWriter, r *http.Request) {
-	rw.Write([]byte(thisID))
 }

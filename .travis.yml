@@ -12,7 +12,7 @@ install:
   - go get -t .
 
 script:
-  - gotestcover -coverprofile="cover.out" -race -covermode="count" .
+  - gotestcover -coverprofile="cover.out" -covermode="count" .
 
 after_success:
   - goveralls -coverprofile="cover.out"

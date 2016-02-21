@@ -220,13 +220,17 @@ func InfoHandler(rw http.ResponseWriter, r *http.Request) {
 // pi launches n goroutines to compute an
 // approximation of pi.
 func pi(n int) float64 {
+	ch := make(chan float64)
+	for k := 0; k <= n; k++ {
+		go term(ch, float64(k))
+	}
 	f := 0.0
 	for k := 0; k <= n; k++ {
-		f += term(float64(k))
+		f += <-ch
 	}
 	return f
 }
 
-func term(k float64) float64 {
-	return 4 * math.Pow(-1, k) / (2*k + 1)
+func term(ch chan float64, k float64) {
+	ch <- 4 * math.Pow(-1, k) / (2 * k + 1)
 }

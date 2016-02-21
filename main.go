@@ -73,14 +73,18 @@ func main() {
 
 	// Connect to database store
 	db, err := sqlx.Connect("postgres", databaseURL)
-	if err == nil {
-		databaseStore := &postgres.PostgresStore{DB: db}
-		router.HandleFunc("/database/contacts", ListContacts(databaseStore)).Methods("GET")
-		router.HandleFunc("/database/contacts", AddContact(databaseStore)).Methods("POST")
-		router.HandleFunc("/database/contacts/{id}", UpdateContact(databaseStore)).Methods("PUT")
-		router.HandleFunc("/database/contacts/{id}", DeleteContact(databaseStore)).Methods("DELETE")
-	} else {
+	if err != nil {
 		log.Printf("Could not connect to database because %s", err)
+	} else {
+		databaseStore := &postgres.PostgresStore{DB: db}
+		if err := databaseStore.CreateSchemas(); err != nil {
+			log.Printf("Could not set up relations %s", err)
+		} else {
+			router.HandleFunc("/database/contacts", ListContacts(databaseStore)).Methods("GET")
+			router.HandleFunc("/database/contacts", AddContact(databaseStore)).Methods("POST")
+			router.HandleFunc("/database/contacts/{id}", UpdateContact(databaseStore)).Methods("PUT")
+			router.HandleFunc("/database/contacts/{id}", DeleteContact(databaseStore)).Methods("DELETE")
+		}
 	}
 
 	// The info endpoint is for showing demonstration purposes only and is not subject to any task.

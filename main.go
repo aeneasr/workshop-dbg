@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"math/rand"
 
 	"encoding/json"
 	"github.com/gorilla/mux"
@@ -20,7 +21,6 @@ import (
 	. "github.com/ory-am/workshop-dbg/store"
 	"github.com/ory-am/workshop-dbg/store/memory"
 	"github.com/ory-am/workshop-dbg/store/postgres"
-	"math/rand"
 )
 
 // In a 12 factor app, we must obey the environment variables.

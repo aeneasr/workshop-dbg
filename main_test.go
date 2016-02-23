@@ -123,6 +123,26 @@ func TestPi(t *testing.T) {
 	assert.Equal(t, 100, res.N)
 }
 
+func TestAllocate(t *testing.T) {
+	// Initialize the HTTP routes, similar to main()
+	router := mux.NewRouter()
+	router.HandleFunc("/allocate", Allocate).Methods("GET")
+	ts := httptest.NewServer(router)
+
+	// Make the request
+	resp, body, errs := gorequest.New().Get(ts.URL + "/allocate?n=100").End()
+	require.Len(t, errs, 0)
+	require.Equal(t, http.StatusOK, resp.StatusCode)
+
+	res := struct {
+		Result string `json:"result"`
+		N  int    `json:"n"`
+	}{}
+	require.Nil(t, json.Unmarshal([]byte(body), &res))
+	assert.Equal(t, 100, res.N)
+	assert.Equal(t, "Processed!", res.Result)
+}
+
 func fetchAndTestContactList(t *testing.T, ts *httptest.Server, compareWith Contacts) {
 	// Request ListContacts
 	resp, err := http.Get(ts.URL + "/contacts")

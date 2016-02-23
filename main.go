@@ -20,6 +20,7 @@ import (
 	. "github.com/ory-am/workshop-dbg/store"
 	"github.com/ory-am/workshop-dbg/store/memory"
 	"github.com/ory-am/workshop-dbg/store/postgres"
+	"math/rand"
 )
 
 // In a 12 factor app, we must obey the environment variables.
@@ -105,6 +106,7 @@ func main() {
 	// The info endpoint is for showing demonstration purposes only and is not subject to any task.
 	router.HandleFunc("/info", InfoHandler).Methods("GET")
 	router.HandleFunc("/pi", ComputePi).Methods("GET")
+	router.HandleFunc("/allocate", Allocate).Methods("GET")
 
 	// Print where to point the browser at.
 	fmt.Printf("Listening on %s\n", "http://localhost:5678")
@@ -211,6 +213,28 @@ func ReadContactData(rw http.ResponseWriter, r *http.Request) (contact Contact, 
 	}
 
 	return contact, nil
+}
+
+func Allocate(rw http.ResponseWriter, r *http.Request) {
+	n, err := strconv.Atoi(r.URL.Query().Get("n"))
+	if err != nil {
+		n = 0
+	}
+	m := make([][]byte, n + 1)
+
+	for i := 0; i < n; i++ {
+		z := make([]byte, n + 1)
+		_, _ = rand.Read(z)
+		m[i] = z
+	}
+
+	pkg.WriteIndentJSON(rw, struct {
+		Result string `json:"result"`
+		N int `json:"n"`
+	}{
+		Result: "Processed!",
+		N: n,
+	})
 }
 
 func ComputePi(rw http.ResponseWriter, r *http.Request) {

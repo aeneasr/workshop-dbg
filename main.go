@@ -113,7 +113,7 @@ func ListContacts(store ContactStorer) func(rw http.ResponseWriter, r *http.Requ
 
 		// Write contact list to output
 		contacts, err := store.FetchContacts()
-		if err != nil {
+		if err != nil
 			http.Error(rw, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -127,7 +127,7 @@ func AddContact(contacts ContactStorer) func(rw http.ResponseWriter, r *http.Req
 	return func(rw http.ResponseWriter, r *http.Request) {
 
 		// We parse the request's information into contactToBeAdded
-		contactToBeAdded, err := ReadContactData(rw, r)
+		contactToBeAdded, err := ReadContactData(rw ,r)
 
 		// Abort handling the request if an error occurs.
 		if err != nil {

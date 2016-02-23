@@ -106,6 +106,7 @@ func main() {
 	// The info endpoint is for showing demonstration purposes only and is not subject to any task.
 	router.HandleFunc("/info", InfoHandler).Methods("GET")
 	router.HandleFunc("/pi", ComputePi).Methods("GET")
+	router.HandleFunc("/pis", ComputePi).Methods("GET")
 	router.HandleFunc("/allocate", Allocate).Methods("GET")
 
 	// Print where to point the browser at.
@@ -252,9 +253,39 @@ func ComputePi(rw http.ResponseWriter, r *http.Request) {
 	})
 }
 
+func ComputePis(rw http.ResponseWriter, r *http.Request) {
+	n, err := strconv.Atoi(r.URL.Query().Get("n"))
+	if err != nil {
+		n = 0
+	}
+
+	pkg.WriteIndentJSON(rw, struct {
+		Pi string `json:"pi"`
+		N  int    `json:"n"`
+	}{
+		Pi: strconv.FormatFloat(pi(n), 'E', -1, 64),
+		N:  n,
+	})
+}
+
 func InfoHandler(rw http.ResponseWriter, r *http.Request) {
 	rw.Write([]byte(thisID))
 }
+
+// pi launches n goroutines to compute an
+// approximation of pi.
+func pis(n int) float64 {
+	f := 0.0
+	for k := 0; k <= n; k++ {
+		f += terms(float64(k))
+	}
+	return f
+}
+
+func terms(k float64) float64 {
+	return 4 * math.Pow(-1, k) / (2*k + 1)
+}
+
 
 // pi launches n goroutines to compute an
 // approximation of pi.

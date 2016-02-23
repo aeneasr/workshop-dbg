@@ -52,7 +52,7 @@ var MyContacts = Contacts{
 		Department: "FAC",
 		Company:    "KPMG",
 	},
-	"uwe-charly": &Contact{
+	"Thomas-Aidan": &Contact{
 		Name:       "Thomas Aidan",
 		Department: "INO",
 		Company:    "OuterSpace",

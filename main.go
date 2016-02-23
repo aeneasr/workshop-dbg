@@ -52,6 +52,16 @@ var MyContacts = Contacts{
 		Department: "FAC",
 		Company:    "KPMG",
 	},
+	"frank-sec": &Contact{
+		Name:       "Frank Secure",
+		Department: "Unknown",
+		Company:    "Secret",
+	},
+	"juergen-elsner": &Contact{
+		Name:       "Jürgen Elsner",
+		Department: "DaCS",
+		Company:    "DBG",
+	},
 }
 
 var memoryStore = &memory.InMemoryStore{Contacts: MyContacts}

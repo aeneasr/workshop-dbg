@@ -264,3 +264,17 @@ Once you have confirmed this dialogue as well and confirmed with *Finish*, you s
 
 Congratulations! You mastered one of the trickiest parts modern developers face: setting up your development environment.
 We are now going to look at some code and collaborative improve our application, deploy it to the cloud, review it and much more.
+
+## References
+
+Microservices
+https://en.wikipedia.org/wiki/Microservices
+
+Representational state transfer (REST)
+https://en.wikipedia.org/wiki/Representational_state_transfer
+
+JavaScript Object Notation (JSON)
+https://en.wikipedia.org/wiki/JSON
+
+Github
+https://github.com/about

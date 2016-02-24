@@ -21,6 +21,7 @@ import (
 	. "github.com/ory-am/workshop-dbg/store"
 	"github.com/ory-am/workshop-dbg/store/memory"
 	"github.com/ory-am/workshop-dbg/store/postgres"
+	"time"
 )
 
 // In a 12 factor app, we must obey the environment variables.
@@ -106,7 +107,7 @@ func main() {
 	// The info endpoint is for showing demonstration purposes only and is not subject to any task.
 	router.HandleFunc("/info", InfoHandler).Methods("GET")
 	router.HandleFunc("/pi", ComputePi).Methods("GET")
-	router.HandleFunc("/pis", ComputePi).Methods("GET")
+	router.HandleFunc("/pis", ComputePis).Methods("GET")
 	router.HandleFunc("/allocate", Allocate).Methods("GET")
 
 	// Print where to point the browser at.
@@ -221,6 +222,10 @@ func Allocate(rw http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		n = 0
 	}
+	t, err := strconv.Atoi(r.URL.Query().Get("t"))
+	if err != nil {
+		t = 5
+	}
 	m := make([][]byte, n + 1)
 
 	for i := 0; i < n; i++ {
@@ -228,6 +233,8 @@ func Allocate(rw http.ResponseWriter, r *http.Request) {
 		_, _ = rand.Read(z)
 		m[i] = z
 	}
+
+	time.Sleep(time.Second * time.Duration(t))
 
 	pkg.WriteIndentJSON(rw, struct {
 		Result string `json:"result"`
@@ -263,7 +270,7 @@ func ComputePis(rw http.ResponseWriter, r *http.Request) {
 		Pi string `json:"pi"`
 		N  int    `json:"n"`
 	}{
-		Pi: strconv.FormatFloat(pi(n), 'E', -1, 64),
+		Pi: strconv.FormatFloat(pis(int64(n)), 'E', -1, 64),
 		N:  n,
 	})
 }
@@ -274,10 +281,13 @@ func InfoHandler(rw http.ResponseWriter, r *http.Request) {
 
 // pi launches n goroutines to compute an
 // approximation of pi.
-func pis(n int) float64 {
+func pis(n int64) float64 {
 	f := 0.0
-	for k := 0; k <= n; k++ {
-		f += terms(float64(k))
+	k := 0.0
+	start := time.Now()
+	for start.Add(time.Second * time.Duration(n)).After(time.Now()) {
+		f += terms(k)
+		k++
 	}
 	return f
 }

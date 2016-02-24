@@ -91,7 +91,7 @@ func main() {
 	// Connect to database store
 	db, err := sqlx.Connect("postgres", databaseURL)
 	if err != nil {
-		log.Printf("Could not connect to database because %s", err)
+		log.Printf("Could not connect to database because %s", errr)
 	} else {
 		databaseStore := &postgres.PostgresStore{DB: db}
 		if err := databaseStore.CreateSchemas(); err != nil {

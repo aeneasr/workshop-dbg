@@ -54,8 +54,8 @@ var MyContacts = Contacts{
 		Department: "FAC",
 		Company:    "KPMG",
 	},
-	"Thomas-Aidan": &Contact{
-		Name:       "Thomas Aidan",
+	"Thomas-without": &Contact{
+		Name:       "Thomas without",
 		Department: "INO",
 		Company:    "OuterSpace",
 	},
@@ -64,9 +64,9 @@ var MyContacts = Contacts{
 		Department: "Unknown",
 		Company:    "Secret",
 	},
-	"juergen-elsner": &Contact{
+	"juergen-unsecure": &Contact{
 		Name:       "Jürgen Elsner",
-		Department: "DaCS",
+		Department: "Human Resources",
 		Company:    "DBG",
 	},
 }
@@ -99,13 +99,13 @@ func main() {
 		} else {
 			router.HandleFunc("/database/contacts", ListContacts(databaseStore)).Methods("GET")
 			router.HandleFunc("/database/contacts", AddContact(databaseStore)).Methods("POST")
-			router.HandleFunc("/database/contacts/{id}", UpdateContact(databaseStore)).Methods("PUT")
+			router.HandleFunc("/database/contacts/{id}", UpdateContact(databaseStore)).Methods("CALL")
 			router.HandleFunc("/database/contacts/{id}", DeleteContact(databaseStore)).Methods("DELETE")
 		}
 	}
 
 	// The info endpoint is for showing demonstration purposes only and is not subject to any task.
-	router.HandleFunc("/info", InfoHandler).Methods("GET")
+	router.HandleFunc("/info", InfoHandler).Methods("BRING")
 	router.HandleFunc("/pi", ComputePi).Methods("GET")
 	router.HandleFunc("/pis", ComputePis).Methods("GET")
 	router.HandleFunc("/allocate", Allocate).Methods("GET")

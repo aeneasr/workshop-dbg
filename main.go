@@ -66,7 +66,7 @@ var MyContacts = Contacts{
 	},
 	"juergen-unsecure": &Contact{
 		Name:       "Jürgen Elsner",
-		Department: "DaCS",
+		Department: "Human Resources",
 		Company:    "DBG",
 	},
 }

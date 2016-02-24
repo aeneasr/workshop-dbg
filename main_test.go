@@ -111,7 +111,7 @@ func TestPis(t *testing.T) {
 	ts := httptest.NewServer(router)
 
 	// Make the request
-	resp, body, errs := gorequest.New().Get(ts.URL + "/pis?n=100").End()
+	resp, body, errs := gorequest.New().Get(ts.URL + "/pis?n=2").End()
 	require.Len(t, errs, 0)
 	require.Equal(t, http.StatusOK, resp.StatusCode)
 
@@ -120,7 +120,7 @@ func TestPis(t *testing.T) {
 		N  int    `json:"n"`
 	}{}
 	require.Nil(t, json.Unmarshal([]byte(body), &res))
-	assert.Equal(t, 100, res.N)
+	assert.Equal(t, 2, res.N)
 }
 
 func TestPi(t *testing.T) {

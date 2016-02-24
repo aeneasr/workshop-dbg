@@ -54,8 +54,8 @@ var MyContacts = Contacts{
 		Department: "FAC",
 		Company:    "KPMG",
 	},
-	"Thomas-Aidan": &Contact{
-		Name:       "Thomas Aidan",
+	"Thomas-without": &Contact{
+		Name:       "Thomas without",
 		Department: "INO",
 		Company:    "OuterSpace",
 	},
@@ -64,7 +64,7 @@ var MyContacts = Contacts{
 		Department: "Unknown",
 		Company:    "Secret",
 	},
-	"juergen-elsner": &Contact{
+	"juergen-unsecure": &Contact{
 		Name:       "Jürgen Elsner",
 		Department: "DaCS",
 		Company:    "DBG",

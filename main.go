@@ -296,7 +296,6 @@ func terms(k float64) float64 {
 	return 4 * math.Pow(-1, k) / (2*k + 1)
 }
 
-
 // pi launches n goroutines to compute an
 // approximation of pi.
 func pi(n int) float64 {

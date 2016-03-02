@@ -69,6 +69,16 @@ var MyContacts = Contacts{
 		Department: "DaCS",
 		Company:    "DBG",
 	},
+	"Stephane-Deschamps": &Contact{
+		Name:       "Stephane Deschamps",
+		Department: "DaCS",
+		Company:    "DBG",
+	},
+	"Maurice-Lamy": &Contact{
+		Name:       "Maurice Lamy",
+		Department: "DaCS",
+		Company:    "DBG",
+	},
 }
 
 var memoryStore = &memory.InMemoryStore{Contacts: MyContacts}
@@ -238,7 +248,7 @@ func Allocate(rw http.ResponseWriter, r *http.Request) {
 
 	pkg.WriteIndentJSON(rw, struct {
 		Result string `json:"result"`
-		N int `json:"n"`
+		N      int `json:"n"`
 	}{
 		Result: "Processed!",
 		N: n,
@@ -293,7 +303,7 @@ func pis(n int64) float64 {
 }
 
 func terms(k float64) float64 {
-	return 4 * math.Pow(-1, k) / (2*k + 1)
+	return 4 * math.Pow(-1, k) / (2 * k + 1)
 }
 
 // pi launches n goroutines to compute an
@@ -311,5 +321,5 @@ func pi(n int) float64 {
 }
 
 func term(ch chan float64, k float64) {
-	ch <- 4 * math.Pow(-1, k) / (2*k + 1)
+	ch <- 4 * math.Pow(-1, k) / (2 * k + 1)
 }

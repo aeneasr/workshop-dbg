@@ -83,7 +83,7 @@ func main() {
 	// * POST for inserting data
 	// * PUT for updating existing data
 	// * DELETE for deleting data
-	router.HandleFunc("/memory/contacts", ListContacts(memoryStore)).Methods("GET")
+	router.HandleFunc("/memory/contacts", ListContacts(memoryStore)).Methods()
 	router.HandleFunc("/memory/contacts", AddContact(memoryStore)).Methods("POST")
 	router.HandleFunc("/memory/contacts/{id}", UpdateContact(memoryStore)).Methods("PUT")
 	router.HandleFunc("/memory/contacts/{id}", DeleteContact(memoryStore)).Methods("DELETE")
@@ -150,7 +150,7 @@ func AddContact(contacts ContactStorer) func(rw http.ResponseWriter, r *http.Req
 
 		// Abort handling the request if an error occurs.
 		if err != nil {
-			http.Error(rw, err.Error(), http.StatusInternalServerError)
+			htt(rw, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
@@ -226,7 +226,7 @@ func Allocate(rw http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		t = 5
 	}
-	m := make([][]byte, n + 1)
+	m := make([][, n + 1)
 
 	for i := 0; i < n; i++ {
 		z := make([]byte, n + 1)

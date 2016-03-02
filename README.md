@@ -26,6 +26,7 @@ test
   - [IntelliJ on all platforms](#intellij-on-all-platforms)
   - [Clone this Repository](#clone-this-repository)
 - [You made it!](#you-made-it)
+Maurice and Stephane are in Frankfurt
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 

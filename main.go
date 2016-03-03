@@ -74,8 +74,8 @@ var MyContacts = Contacts{
 		Department: "DaCS",
 		Company:    "DBG",
 	},
-	"Maurice-Lamy": &Contact{
-		Name:       "Maurice Lamy",
+	"Gilles-Lamy": &Contact{
+		Name:       "MGilles Lamy",
 		Department: "DaCS",
 		Company:    "DBG",
 	},

@@ -47,7 +47,17 @@ func TestListContacts(t *testing.T) {
 	// This helper function makes an http request to ListContacts and validates its output.
 	fetchAndTestContactList(t, ts, mockedContactList)
 }
+func TestHeadContacts(t *testing.T) {
+	store := &memory.InMemoryStore{Contacts: mockedContactList}
 
+	// Initialize everything (very similar to main() function).
+	router := mux.NewRouter()
+	router.HandleFunc("/contacts", ListContacts(store)).Methods("HEAD")
+	ts := httptest.NewServer(router)
+
+	// This helper function makes an http request to ListContacts and validates its output.
+	fetchAndTestContactExist(t, ts, mockedContactList)
+}
 func TestAddContacts(t *testing.T) {
 	// We create a copy of the store
 	contactListForThisTest := copyContacts(mockedContactList)
@@ -179,7 +189,23 @@ func fetchAndTestContactList(t *testing.T, ts *httptest.Server, compareWith Cont
 	// Compare the outputs
 	assert.Equal(t, compareWith, result)
 }
+func fetchAndTestContactExist(t *testing.T, ts *httptest.Server, compareWith Contacts) {
+	// Request ListContacts
+	resp, err := http.Head(ts.URL + "/Thomas-Aidan")
 
+	// Verify that no errors occurred
+	require.Nil(t, err)
+
+	// Unmarshal the output
+	var result Contacts
+	err = json.NewDecoder(resp.Body).Decode(&result)
+
+	// Make sure that no error occurred
+	require.Nil(t, err)
+
+	// Compare the outputs
+	assert.Equal(t, compareWith, result)
+}
 func copyContacts(original Contacts) Contacts {
 	result := Contacts{}
 	for k, v := range original {

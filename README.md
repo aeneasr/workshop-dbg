@@ -7,8 +7,6 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**
 
-test
-
 - [Prerequisites](#prerequisites)
 - [Setting up your development environment](#setting-up-your-development-environment)
   - [Git](#git)
@@ -28,6 +26,53 @@ test
 - [You made it!](#you-made-it)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+
+Build image and start container
+- cd $GOPATH/src/github.com/ory-am/workshop-dbg
+- docker build -t workshop-dbg .
+- docker run -d --publish 5678:5678 workshop-dbg
+- open http://$(docker-machine ip default):5678/memory/contacts
+
+Show layer configuration
+- docker history workshop-dbg
+
+List running Containers
+- docker ps
+
+Kill Container
+- docker rm -f <id>
+- docker rmi workshop-dbg
+
+List Docker Images
+- docker images
+
+Build container and make it public
+- docker build -t oryam/workshop-dbg .
+- docker run -d --publish 5678:5679 oryam/workshop-dbg
+- docker push oryam/workshop-dbg
+
+Use Docker Hub to download images from the cloud
+- docker run -d --publish 5679:5678 oryam/workshop-dbg-auto
+- open http://$(docker-machine ip default):5679/memory/contacts
+	
+
+Run Wordpress using Docker Hub
+- docker run --name some-mysql -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql:latest
+- docker run --name some-wordpress --link some-mysql:mysql -p 9090:80 -d wordpress
+- open http://$(docker-machine ip default):9090
+
+Build an image with Docker and push it to production using heroku (beta!)
+- cd ~
+- git clone https://github.com/dbg-workshop/go-websocket-chat-demo
+- cd go-websocket-chat-demo/
+- git checkout origin/patch-1 -b patch-1
+- docker-compose up web
+- open http://$(docker-machine ip default):8080
+- heroku create
+- heroku docker:release
+
+
 
 ## Prerequisites
 

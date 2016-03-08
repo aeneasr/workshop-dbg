@@ -79,6 +79,21 @@ var MyContacts = Contacts{
 		Department: "DaCS",
 		Company:    "DBG",
 	},
+	"Helge Harren": &Contact{
+		Name:       "Helge Harren",
+		Department: "TRIT",
+		Company:    "DBG",
+	},
+	"Stephan Reinartz": &Contact{
+		Name:       "Stephan Reinartz",
+		Department: "SMMI",
+		Company:    "DBG",
+	},
+	"Ulrich Meyer": &Contact{
+		Name:       "Ulrich Meyer",
+		Department: "TRIT",
+		Company:    "DBG",
+	},
 }
 
 var memoryStore = &memory.InMemoryStore{Contacts: MyContacts}

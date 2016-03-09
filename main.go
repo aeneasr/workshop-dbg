@@ -148,7 +148,15 @@ func ListContacts(store ContactStorer) func(rw http.ResponseWriter, r *http.Requ
 		}
 
 		pkg.WriteIndentJSON(rw, contacts)
+
 	}
+}
+
+// ContactsMeta gets the metadata.
+func ContactsMeta (rw http.ResponseWriter, r *http.Request) {
+	rw.Header().Set("Content-Type","application/json")
+
+
 }
 
 // AddContact will add a contact to the list

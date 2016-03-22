@@ -136,7 +136,7 @@ Go.
 
 #### Installing JetBrains IntelliJ IDEA on Windows
 
-The set up is straight forward. You can leave all defaults as-is. Once Go is installed, you should see a screen similar to this one:
+The set up is straight forward. You can leave all defaults as-is. Once IntelliJ is installed, you should see a screen similar to this one:
 
 ![](docs/win-intellij-install.png)
 
@@ -144,7 +144,7 @@ You can now skip ahead to [Windows Environment](#windows-environment).
 
 #### Installing JetBrains IntelliJ IDEA on OSX
 
-The set up is straight forward. You can leave all defaults as-is. Once Go is installed, you should see a screen similar to this one:
+The set up is straight forward. You can leave all defaults as-is. Once IntelliJ is installed, you should see a screen similar to this one:
 
 ![](docs/mac-intellij-install.png)
 

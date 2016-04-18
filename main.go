@@ -40,7 +40,7 @@ var MyContacts = Contacts{
 		Company:    "ACME Inc",
 	},
 	"cathrine-mueller": &Contact{
-		Name:       "Cathrine Müller",
+		Name:       "Cathrine Eholzer",
 		Department: "HR",
 		Company:    "Grove AG",
 	},
@@ -55,13 +55,13 @@ var MyContacts = Contacts{
 		Company:    "KPMG",
 	},
 	"Thomas-Aidan": &Contact{
-		Name:       "Thomas Aidan",
+		Name:       "Thomas Aigan",
 		Department: "INO",
 		Company:    "OuterSpace",
 	},
 	"frank-sec": &Contact{
 		Name:       "Frank Secure",
-		Department: "Unknown",
+		Department: "Unknow",
 		Company:    "Secret",
 	},
 	"juergen-elsner": &Contact{

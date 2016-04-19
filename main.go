@@ -94,6 +94,12 @@ var MyContacts = Contacts{
 		Department: "TRIT",
 		Company:    "DBG",
 	},
+	"Matthias Kluber": &Contact{
+		Name:       "Matthias Kluber",
+		Department: "I&O",
+		Company:    "DBG",
+	},
+
 }
 
 var memoryStore = &memory.InMemoryStore{Contacts: MyContacts}

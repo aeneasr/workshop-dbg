@@ -47,7 +47,17 @@ func TestListContacts(t *testing.T) {
 	// This helper function makes an http request to ListContacts and validates its output.
 	fetchAndTestContactList(t, ts, mockedContactList)
 }
+func TestHeadContacts(t *testing.T) {
 
+
+	// Initialize everything (very similar to main() function).
+	router := mux.NewRouter()
+	router.HandleFunc("/contacts", ContactsMeta).Methods("HEAD")
+	ts := httptest.NewServer(router)
+
+	// This helper function makes an http request to ListContacts and validates its output.
+	fetchAndTestContactHead(t, ts)
+}
 func TestAddContacts(t *testing.T) {
 	// We create a copy of the store
 	contactListForThisTest := copyContacts(mockedContactList)
@@ -179,7 +189,16 @@ func fetchAndTestContactList(t *testing.T, ts *httptest.Server, compareWith Cont
 	// Compare the outputs
 	assert.Equal(t, compareWith, result)
 }
+func fetchAndTestContactHead(t *testing.T, ts *httptest.Server) {
+	// Request ListContacts
+	resp, err := http.Head(ts.URL + "/contacts")
 
+	// Verify that no errors occurred
+	require.Nil(t, err)
+	// Compare the outputs
+	assert.Equal(t, "application/json", resp.Header.Get("Content-Type"))
+	t.Logf("%s", resp.Header)
+}
 func copyContacts(original Contacts) Contacts {
 	result := Contacts{}
 	for k, v := range original {

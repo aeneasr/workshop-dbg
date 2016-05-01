@@ -354,6 +354,8 @@ heroku docker:release
 cd $GOPATH/src/github.com/ory-am/workshop-dbg
 docker build -t gcr.io/dbg-workshop-1298/workshop-dbg .
 docker run -d --publish 9090:5678 gcr.io/dbg-workshop-1298/workshop-dbg
+open http://$(docker-machine ip default):9090/memory/contacts
+
 
 gcloud docker push gcr.io/dbg-workshop-1298/workshop-dbg
 kubectl run hello-workshop --image=gcr.io/dbg-workshop-1298/workshop-dbg --port=5678

@@ -279,47 +279,100 @@ We are now going to look at some code and collaborative improve our application,
 ## Docker
 
 ### Build image and start container
-- `cd $GOPATH/src/github.com/ory-am/workshop-dbg`
-- `docker build -t workshop-dbg .`
-- `docker run -d --publish 5678:5678 workshop-dbg`
-- `open http://$(docker-machine ip default):5678/memory/contacts`
+
+```
+cd $GOPATH/src/github.com/ory-am/workshop-dbg
+docker build -t workshop-dbg .
+docker run -d --publish 5678:5678 workshop-dbg
+open http://$(docker-machine ip default):5678/memory/contacts
+```
 
 ### Show layer configuration
-- `docker history workshop-dbg`
+
+```
+docker history workshop-dbg
+```
 
 ### List running Containers
-- `docker ps`
+
+```
+docker ps
+```
 
 ### Kill Container
-- `docker rm -f <id>`
-- `docker rmi workshop-dbg`
+
+```
+docker rm -f <id>
+```
 
 ### List Docker Images
-- `docker images`
+
+```
+docker images
+```
 
 ### Build container and make it public
-- `docker build -t oryam/workshop-dbg .`
-- `docker run -d --publish 5678:5679 oryam/workshop-dbg`
-- `docker push oryam/workshop-dbg`
+
+```
+docker build -t oryam/workshop-dbg .
+docker run -d --publish 5678:5678 oryam/workshop-dbg
+docker push oryam/workshop-dbg
+```
 
 ### Use Docker Hub to download images from the cloud
-- `docker run -d --publish 5679:5678 oryam/workshop-dbg-auto`
-- `open http://$(docker-machine ip default):5679/memory/contacts`
+
+```
+docker run -d --publish 5679:5678 oryam/workshop-dbg-auto
+open http://$(docker-machine ip default):5679/memory/contacts
+```
 
 ### Run Wordpress using Docker Hub
-- `docker run --name some-mysql -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql:latest`
-- `docker run --name some-wordpress --link some-mysql:mysql -p 9090:80 -d wordpress`
-- `open http://$(docker-machine ip default):9090`
+
+```
+docker run --name some-mysql -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql:latest
+docker run --name some-wordpress --link some-mysql:mysql -p 9090:80 -d wordpress
+open http://$(docker-machine ip default):9090
+```
 
 ### Build an image with Docker and push it to production using heroku (beta!)
-- `cd ~`
-- `git clone https://github.com/dbg-workshop/go-websocket-chat-demo`
-- `cd go-websocket-chat-demo/`
-- `git checkout origin/patch-1 -b patch-1`
-- `docker-compose up web`
-- `open http://$(docker-machine ip default):8080`
-- `heroku create`
-- `heroku docker:release`
+
+```
+cd ~
+git clone https://github.com/dbg-workshop/go-websocket-chat-demo
+cd go-websocket-chat-demo/
+git checkout origin/patch-1 -b patch-1
+docker-compose up web
+open http://$(docker-machine ip default):8080
+heroku create
+heroku docker:release
+```
+
+### Build project and run it on Google Container Engine
+
+```
+cd $GOPATH/src/github.com/ory-am/workshop-dbg
+docker build -t gcr.io/dbg-workshop-1298/workshop-dbg .
+docker run -d --publish 9090:5678 gcr.io/dbg-workshop-1298/workshop-dbg
+
+gcloud docker push gcr.io/dbg-workshop-1298/workshop-dbg
+kubectl run hello-workshop --image=gcr.io/dbg-workshop-1298/workshop-dbg --port=5678
+kubectl get deployments
+kubectl get pods
+kubectl logs <POD-NAME>
+kubectl cluster-info
+kubectl expose deployment hello-workshop --type="LoadBalancer"
+
+kubectl scale deployment hello-workshop --replicas=4
+kubectl get deployments
+kubectl get pods
+kubectl expose deployment hello-workshop --type="LoadBalancer"
+kubectl get services hello-workshop
+
+open http://<external_ip>:5678/memory/contacts
+
+kubectl delete service,deployment hello-workshop
+```
+
 
 ## References
 

@@ -33,8 +33,8 @@
   - [Build container and make it public](#build-container-and-make-it-public)
   - [Use Docker Hub to download images from the cloud](#use-docker-hub-to-download-images-from-the-cloud)
   - [Run Wordpress using Docker Hub](#run-wordpress-using-docker-hub)
-  - [Build an image with Docker and push it to production using heroku (beta!)](#build-an-image-with-docker-and-push-it-to-production-using-heroku-beta)
   - [Build project and run it on Google Container Engine](#build-project-and-run-it-on-google-container-engine)
+  - [Build an image with Docker and push it to production using heroku (beta!)](#build-an-image-with-docker-and-push-it-to-production-using-heroku-beta)
 - [References](#references)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -335,45 +335,69 @@ docker run --name some-wordpress --link some-mysql:mysql -p 9090:80 -d wordpress
 open http://$(docker-machine ip default):9090
 ```
 
-### Build an image with Docker and push it to production using heroku (beta!)
-
-```
-cd ~
-git clone https://github.com/dbg-workshop/go-websocket-chat-demo
-cd go-websocket-chat-demo/
-git checkout origin/patch-1 -b patch-1
-docker-compose up web
-open http://$(docker-machine ip default):8080
-heroku create
-heroku docker:release
-```
-
 ### Build project and run it on Google Container Engine
+
+**Build docker image and run it locally**
 
 ```
 cd $GOPATH/src/github.com/ory-am/workshop-dbg
 docker build -t gcr.io/dbg-workshop-1298/workshop-dbg .
 docker run -d --publish 9090:5678 gcr.io/dbg-workshop-1298/workshop-dbg
 open http://$(docker-machine ip default):9090/memory/contacts
+```
 
-
+**Push docker image to private repository**
+```
 gcloud docker push gcr.io/dbg-workshop-1298/workshop-dbg
+```
+
+**Run docker image on kubernetes**
+```
+kubectl cluster-info
 kubectl run hello-workshop --image=gcr.io/dbg-workshop-1298/workshop-dbg --port=5678
 kubectl get deployments
 kubectl get pods
-kubectl logs <POD-NAME>
-kubectl cluster-info
-kubectl expose deployment hello-workshop --type="LoadBalancer"
+```
 
+**Expose image to the web**
+```
+kubectl expose deployment hello-workshop --type="LoadBalancer"
+kubectl get services hello-workshop
+open http://<external_ip>:5678/memory/contacts
+```
+
+**Scaling**
+```
 kubectl scale deployment hello-workshop --replicas=4
 kubectl get deployments
 kubectl get pods
-kubectl expose deployment hello-workshop --type="LoadBalancer"
-kubectl get services hello-workshop
+```
 
-open http://<external_ip>:5678/memory/contacts
+Learn more about [autoscaling](http://kubernetes.io/docs/user-guide/horizontal-pod-autoscaling/) and
+[rolling updates](http://kubernetes.io/docs/user-guide/rolling-updates/).
 
+**Cleanup**
+```
 kubectl delete service,deployment hello-workshop
+```
+
+### Build an image with Docker and push it to production using heroku (beta!)
+
+**Run locally**
+```
+cd ~
+git clone https://github.com/dbg-workshop/go-websocket-chat-demo
+cd go-websocket-chat-demo/
+docker-compose up web -d
+open http://$(docker-machine ip default):8080
+```
+
+**Publish to the cloud**
+```
+heroku create
+heroku docker:release
+heroku apps:info
+open <url>
 ```
 
 

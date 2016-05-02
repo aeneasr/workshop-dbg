@@ -34,7 +34,8 @@
   - [Use Docker Hub to download images from the cloud](#use-docker-hub-to-download-images-from-the-cloud)
   - [Run Wordpress using Docker Hub](#run-wordpress-using-docker-hub)
   - [Build project and run it on Google Container Engine](#build-project-and-run-it-on-google-container-engine)
-  - [Build an image with Docker and push it to production using heroku (beta!)](#build-an-image-with-docker-and-push-it-to-production-using-heroku-beta)
+- [Heroku](#heroku)
+  - [Build Docker image and push it to heroku (beta!)](#build-docker-image-and-push-it-to-heroku-beta)
 - [References](#references)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -279,7 +280,27 @@ We are now going to look at some code and collaborative improve our application,
 
 ## Docker
 
-### Build image and start container
+### Basics
+
+**Run `echo "hello world"`**
+```
+docker run ubuntu /bin/echo 'Hello world'
+```
+
+**Run bash**
+```
+docker run -t -i ubuntu /bin/bash
+```
+
+**Daemonize and cleanup**
+```
+docker run -d ubuntu /bin/sh -c "while true; do echo hello world; sleep 1; done"
+docker logs <name>
+docker kill <name>
+docker rm <name>
+```
+
+### Build image using Dockerfile and start container
 
 ```
 cd $GOPATH/src/github.com/ory-am/workshop-dbg
@@ -381,7 +402,29 @@ Learn more about [autoscaling](http://kubernetes.io/docs/user-guide/horizontal-p
 kubectl delete service,deployment hello-workshop
 ```
 
-### Build an image with Docker and push it to production using heroku (beta!)
+## Heroku
+
+**Scale process up to a hundred instances**
+```
+heroku ps:scale web=100 --app dbg-contacts
+```
+
+**Scale process down**
+```
+heroku ps:scale web=1 --app dbg-contacts
+```
+
+**List releases**
+```
+heroku releases --app dbg-contacts
+```
+
+**Rollback**
+```
+heroku rollback --app dbg-contacts <id>
+```
+
+### Build Docker image and push it to heroku (beta!)
 
 **Run locally**
 ```

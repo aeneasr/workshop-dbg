@@ -24,8 +24,10 @@
   - [IntelliJ on all platforms](#intellij-on-all-platforms)
   - [Clone this Repository](#clone-this-repository)
 - [You made it!](#you-made-it)
+- [Heroku](#heroku)
 - [Docker](#docker)
-  - [Build image and start container](#build-image-and-start-container)
+  - [Basics](#basics)
+  - [Build image using Dockerfile and start container](#build-image-using-dockerfile-and-start-container)
   - [Show layer configuration](#show-layer-configuration)
   - [List running Containers](#list-running-containers)
   - [Kill Container](#kill-container)
@@ -34,7 +36,6 @@
   - [Use Docker Hub to download images from the cloud](#use-docker-hub-to-download-images-from-the-cloud)
   - [Run Wordpress using Docker Hub](#run-wordpress-using-docker-hub)
   - [Build project and run it on Google Container Engine](#build-project-and-run-it-on-google-container-engine)
-- [Heroku](#heroku)
   - [Build Docker image and push it to heroku (beta!)](#build-docker-image-and-push-it-to-heroku-beta)
 - [References](#references)
 
@@ -278,6 +279,33 @@ Once you have confirmed this dialogue as well and confirmed with *Finish*, you s
 Congratulations! You mastered one of the trickiest parts modern developers face: setting up your development environment.
 We are now going to look at some code and collaborative improve our application, deploy it to the cloud, review it and much more.
 
+## Heroku
+
+**Deploy latest changes to the cloud**
+```
+git push heroku <branch>:master
+```
+
+**Scale process up to a hundred instances**
+```
+heroku ps:scale web=100 --app dbg-contacts
+```
+
+**Scale process down**
+```
+heroku ps:scale web=1 --app dbg-contacts
+```
+
+**List releases**
+```
+heroku releases --app dbg-contacts
+```
+
+**Rollback**
+```
+heroku rollback --app dbg-contacts <id>
+```
+
 ## Docker
 
 ### Basics
@@ -337,7 +365,6 @@ docker images
 
 ```
 docker build -t oryam/workshop-dbg .
-docker run -d --publish 5678:5678 oryam/workshop-dbg
 docker push oryam/workshop-dbg
 ```
 
@@ -402,28 +429,6 @@ Learn more about [autoscaling](http://kubernetes.io/docs/user-guide/horizontal-p
 kubectl delete service,deployment hello-workshop
 ```
 
-## Heroku
-
-**Scale process up to a hundred instances**
-```
-heroku ps:scale web=100 --app dbg-contacts
-```
-
-**Scale process down**
-```
-heroku ps:scale web=1 --app dbg-contacts
-```
-
-**List releases**
-```
-heroku releases --app dbg-contacts
-```
-
-**Rollback**
-```
-heroku rollback --app dbg-contacts <id>
-```
-
 ### Build Docker image and push it to heroku (beta!)
 
 **Run locally**
@@ -442,7 +447,6 @@ heroku docker:release
 heroku apps:info
 open <url>
 ```
-
 
 ## References
 

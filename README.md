@@ -436,7 +436,7 @@ kubectl delete service,deployment hello-workshop
 cd ~
 git clone https://github.com/dbg-workshop/go-websocket-chat-demo
 cd go-websocket-chat-demo/
-docker-compose up web -d
+docker-compose up -d web
 open http://$(docker-machine ip default):8080
 ```
 

@@ -157,7 +157,7 @@ func ListContacts(store ContactStorer) func(rw http.ResponseWriter, r *http.Requ
 
 		// Write contact list to output
 		contacts, err := store.FetchContacts()
-		if err != nil {
+		if err == nil {
 			http.Error(rw, err.Error(), http.StatusInternalServerError)
 			return
 		}

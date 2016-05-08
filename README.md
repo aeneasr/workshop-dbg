@@ -315,6 +315,42 @@ heroku rollback --app dbg-contacts <id>
 docker run ubuntu /bin/echo 'Hello world'
 ```
 
+**Check all containers, including stopped ones**
+```
+docker ps -a
+```
+
+**Rerun and remove the container**
+```
+docker start -a <id>
+docker rm <id>
+```
+
+**List available images**
+```
+docker images
+```
+
+**Remove the ubuntu image**
+```
+docker rmi -f ubuntu
+```
+
+**Rerun and the container**
+```
+docker run ubuntu /bin/echo 'Hello world'
+```
+
+**Remove all images**
+```
+docker rmi -f $(docker images -q)
+```
+
+**Rerun and the container**
+```
+docker run ubuntu /bin/echo 'Hello world'
+```
+
 **Run bash**
 ```
 docker run -t -i ubuntu /bin/bash

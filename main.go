@@ -9,8 +9,8 @@ import (
 
 	"encoding/json"
 	"github.com/gorilla/mux"
-	"github.com/ory-am/common/env"
-	"github.com/ory-am/common/pkg"
+	"github.com/ory/common/env"
+	"github.com/ory/common/pkg"
 	"github.com/pborman/uuid"
 	"github.com/rs/cors"
 	"math"
@@ -18,9 +18,9 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-	. "github.com/ory-am/workshop-dbg/store"
-	"github.com/ory-am/workshop-dbg/store/memory"
-	"github.com/ory-am/workshop-dbg/store/postgres"
+	. "github.com/ory/workshop-dbg/store"
+	"github.com/ory/workshop-dbg/store/memory"
+	"github.com/ory/workshop-dbg/store/postgres"
 	"time"
 )
 

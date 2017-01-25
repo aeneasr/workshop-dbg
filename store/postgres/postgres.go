@@ -4,7 +4,7 @@ import (
 	"fmt"
 	log "github.com/Sirupsen/logrus"
 	"github.com/jmoiron/sqlx"
-	"github.com/ory-am/workshop-dbg/store"
+	"github.com/ory/workshop-dbg/store"
 )
 
 const contactTable = "dbg_contacts"

@@ -2,12 +2,12 @@ package postgres
 
 import (
 	"github.com/jmoiron/sqlx"
-	"github.com/ory-am/dockertest"
+	"github.com/ory/dockertest"
 	"testing"
 	"time"
 
 	_ "github.com/lib/pq"
-	"github.com/ory-am/workshop-dbg/store"
+	"github.com/ory/workshop-dbg/store"
 	"github.com/pborman/uuid"
 	"github.com/stretchr/testify/assert"
 	"log"

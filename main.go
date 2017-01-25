@@ -18,9 +18,9 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-	. "github.com/ory-am/workshop-dbg/store"
-	"github.com/ory-am/workshop-dbg/store/memory"
-	"github.com/ory-am/workshop-dbg/store/postgres"
+	. "github.com/ory/workshop-dbg/store"
+	"github.com/ory/workshop-dbg/store/memory"
+	"github.com/ory/workshop-dbg/store/postgres"
 	"time"
 )
 

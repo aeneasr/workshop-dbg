@@ -7,7 +7,7 @@ import (
 	"time"
 
 	_ "github.com/lib/pq"
-	"github.com/ory-am/workshop-dbg/store"
+	"github.com/ory/workshop-dbg/store"
 	"github.com/pborman/uuid"
 	"github.com/stretchr/testify/assert"
 	"log"

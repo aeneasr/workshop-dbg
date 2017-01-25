@@ -1,7 +1,7 @@
 # Workshop Deutsche Börse Group
 
-[![Build Status](https://travis-ci.org/ory-am/workshop-dbg.svg?branch=master)](https://travis-ci.org/ory-am/workshop-dbg)
-[![Coverage Status](https://coveralls.io/repos/github/ory-am/workshop-dbg/badge.svg?branch=master)](https://coveralls.io/github/ory-am/workshop-dbg?branch=master)
+[![Build Status](https://travis-ci.org/ory/workshop-dbg.svg?branch=master)](https://travis-ci.org/ory/workshop-dbg)
+[![Coverage Status](https://coveralls.io/repos/github/ory/workshop-dbg/badge.svg?branch=master)](https://coveralls.io/github/ory/workshop-dbg?branch=master)
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -255,7 +255,7 @@ The following screens should be similar to what you see on your screen:
 
 ![](docs/intellij-home.png)
 
-use this link as repository url `https://github.com/ory-am/workshop-dbg.git` and your workspace directory (e.g. `/Users/aeneas/workspace/go`)
+use this link as repository url `https://github.com/ory/workshop-dbg.git` and your workspace directory (e.g. `/Users/aeneas/workspace/go`)
 as parent directory.
 
 ![](docs/intellij-clone.png)
@@ -367,7 +367,7 @@ docker rm <name>
 ### Build image using Dockerfile and start container
 
 ```
-cd $GOPATH/src/github.com/ory-am/workshop-dbg
+cd $GOPATH/src/github.com/ory/workshop-dbg
 docker build -t workshop-dbg .
 docker run -d --publish 5678:5678 workshop-dbg
 open http://$(docker-machine ip default):5678/memory/contacts
@@ -424,7 +424,7 @@ open http://$(docker-machine ip default):9090
 **Build docker image and run it locally**
 
 ```
-cd $GOPATH/src/github.com/ory-am/workshop-dbg
+cd $GOPATH/src/github.com/ory/workshop-dbg
 docker build -t gcr.io/dbg-workshop-1298/workshop-dbg .
 docker run -d --publish 9090:5678 gcr.io/dbg-workshop-1298/workshop-dbg
 open http://$(docker-machine ip default):9090/memory/contacts

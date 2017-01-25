@@ -2,7 +2,7 @@ package memory
 
 import (
 	"errors"
-	"github.com/ory-am/workshop-dbg/store"
+	"github.com/ory/workshop-dbg/store"
 )
 
 type InMemoryStore struct {

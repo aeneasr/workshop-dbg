@@ -1,7 +1,7 @@
 package memory
 
 import (
-	"github.com/ory-am/workshop-dbg/store"
+	"github.com/ory/workshop-dbg/store"
 	"github.com/pborman/uuid"
 	"github.com/stretchr/testify/assert"
 	"testing"

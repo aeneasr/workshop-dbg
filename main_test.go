@@ -7,8 +7,8 @@ import (
 	"testing"
 
 	"github.com/gorilla/mux"
-	. "github.com/ory/workshop-dbg/store"
-	"github.com/ory/workshop-dbg/store/memory"
+	. "github.com/ory-am/workshop-dbg/store"
+	"github.com/ory-am/workshop-dbg/store/memory"
 	"github.com/parnurzeal/gorequest"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

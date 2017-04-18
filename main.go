@@ -71,8 +71,7 @@ var MyContacts = Contacts{
 	},
 	"Stephane-Deschamps": &Contact{
 		Name:       "Stephane Deschamps",
-		Department: "DaCS",
-		Company:    "DBG",
+
 	},
 	"Gilles-Lamy": &Contact{
 		Name:       "MGilles Lamy",
@@ -162,7 +161,7 @@ func main() {
 }
 
 // ListContacts takes a contact list and outputs it.
-func ListContacts(store ContactStorer) func(rw http.ResponseWriter, r *http.Request) {
+func ListContacts(store ContactStorer) func(rw http.ResponseWriter, r http.Request) {
 	return func(rw http.ResponseWriter, r *http.Request) {
 
 		// Write contact list to output

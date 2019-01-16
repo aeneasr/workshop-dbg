@@ -57,7 +57,7 @@ var MyContacts = Contacts{
 
 // The main routine is going the "entry" point.
 func main() {
-	// Create a new router.
+	// Create a new router.////
 	router := mux.NewRouter()
 
 	// Requests to "/" are by method listContacts.

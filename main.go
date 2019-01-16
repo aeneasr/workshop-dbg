@@ -110,7 +110,7 @@ var memoryStore = &memory.InMemoryStore{Contacts: MyContacts}
 
 // The main routine is going the "entry" point.
 func main() {
-	// Create a new router.
+	// Create a new router.////
 	router := mux.NewRouter()
 
 	// RESTful defines operations
